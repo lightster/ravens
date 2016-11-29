@@ -1,14 +1,14 @@
 {
-    "name": "lightster/hodor",
-    "description": "PHP/rabbitmq-based job queue",
+    "name": "hodor/ravens",
+    "description": "PHP/rabbitmq-based message queue library",
     "keywords": [
         "hodor",
         "php",
         "rabbitmq",
-        "job",
+        "message",
         "queue"
     ],
-    "homepage": "http://github.com/lightster/hodor",
+    "homepage": "http://github.com/hold-the-door/ravens",
     "license": "MIT",
     "autoload": {
         "psr-0": {
@@ -21,8 +21,6 @@
         }
     },
     "require": {
-        "davedevelopment/phpmig": "^1.1.0",
-        "lightster/yo-pdo": "^0.1.3",
         "php": ">=5.5.18",
         "pimple/pimple": "^1.1.1",
         "php-amqplib/php-amqplib": "^2.4.0",

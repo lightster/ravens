@@ -6,16 +6,10 @@ php:
   - 7.0
 
 services:
-  - postgres
   - rabbitmq
 
-addons:
-  postgresql: "9.3"
-
 before_script:
-  - psql -c 'create database travisci_hodor;' -U postgres
   - cp config/dist/config.test.php config/config.test.php
-  - sed -i 's#dbname=test_hodor#dbname=travisci_hodor#' config/config.test.php
 
 install:
   - composer install
@@ -26,7 +20,7 @@ after_script:
 notifications:
   slack:
     rooms:
-      - secure: l6BPBIih0bxP+6AV4ZwqbwewX4KB+DInf2GHfbzaAkFwanDDugWl/k1gakLmDSU6TbJDEpQq4yYnA8k+LcXvrxBYB9DIfB9DC/aExLujHWH8inb5WrSGi9dKN+cwYVj85RBniC/UWGopYWYTVJBy6XZrthQ9FST76jbH6MTvDmLRdK+enX34PKGXxEOGpDqt8wqq+d6WUSVxbyXwBnxBvLgz4WVTgHB4dpR4O6ouQvjqoV+RwSQDP2vYgHzUyteBj6uJZNRe8AETPe1l2/5VVN/K4WhFihUdR4LG9EMNcmMqqAnXXxwsA6a80xUQ3rw+88McxuXHYC2fYZxnI4b/zz42KwzPX2Q/2872CzO5ZMunGgbcPgdXACx3wUGuk5Pii/SMynEZWQ0h9h1sIHrJbnfzeP+sjRyY/X/UA8xcuJReKKf5BoJvedOLejQUwZEJfvLB2E91xybR/cM4U96XSXKbF6MjaDrIpxJgtxQVuveZdmX2nuevY7pLd90hinnewV0zpRY1Cka8iebQF/f3vuRsa5t6xS4OQKPEur9FRVS0SqkpsEpM0Q8Pj6ACudX8VF5qODYNlR3WkWDsXmkZrOUUzunFK0rsMWg6l/qTviH480+3pXDPZN5b2UiSYY9mY4xL/kJT6lSa4nNcxZL21pt73Pxzs2csBXYAJ3bwXIo=
+      - secure: eukcST8ddNlwbW5jHMCJE6rbJou6YFTTNPczsT2rRec/CbT7Z+zIDM5GErmPy3kbO9jn7Nh1g3xC6su6CSKrIuHYmHzZLz4u+G5vFQhRoV+WwWzuImbVvJAXIzA1V/+AMzCGNqolBmp2vQkbXIP//k7T3OnwddKlRFhd8caYQsrmMvHSZwde8pdTQG6c/iHm7Ur1/4JpgKghoejoR5HjOv6ldbqsCOz2QurMBZELlHg0H/2+tqRfuuDTorWtNfiohi8t45RZqy8Vbjrv/vQElFoUFbg6HFvIMYtRCHmBAkLCC01UBCk04CV40Kl1bIcupvPeMgLoi9rdRRUA+gQnKiaPTUCLN6zcsVukVgyTkZIVZPvcZvd+FzCEVNiLHs2zNMuStmsfKENFdzuJgPT4AbHbQkpP2daRimCXP2GmQGwdYtf8p9SOL7LufzOJWDrEuE6Heacdnn6b9upSSKVO1V1MkPT4RJWl7df+4DO8fTtfNMLrCs+ASYJ1fAvZdPthF+B18mabtW1AnXXVbiESIK0wwZTAW/mD/z65oTETVzbk89u79Io2n2sMkMafyJLopWcXOuTs+zQlv9JfZTXAGd90pZFeJafxyasHlS2zvNPnv9oQK7o/HgsoIA9EGsPlYwH/BZdgfHs75fOTdVcg8InzQ/iXXt8f0VSakqAmwqc=
     on_success: change
     on_failure: always
     on_start:   change

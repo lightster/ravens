@@ -23,7 +23,7 @@
     "require": {
         "php": ">=5.5.18",
         "pimple/pimple": "^1.1.1",
-        "php-amqplib/php-amqplib": "^2.4.0",
+        "php-amqplib/php-amqplib": "^2.5.2",
         "symfony/console": "^2.8.3"
     },
     "require-dev": {

@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "84cf3e4bd7e2f5466773108c85bdbdaa",
-    "content-hash": "386f41b89859a84cbbbb420fec5c45ff",
+    "hash": "8d739ef830c13216ce77b64e97b88067",
+    "content-hash": "b237c4a006445e78ecb18b57e7ad4bbf",
     "packages": [
         {
             "name": "php-amqplib/php-amqplib",
-            "version": "v2.6.2",
+            "version": "v2.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "ba9468b08b5ff90859ef5069a6b9a70bcdd98fa1"
+                "reference": "fa2f0d4410a11008cb36b379177291be7ee9e4f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/ba9468b08b5ff90859ef5069a6b9a70bcdd98fa1",
-                "reference": "ba9468b08b5ff90859ef5069a6b9a70bcdd98fa1",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/fa2f0d4410a11008cb36b379177291be7ee9e4f6",
+                "reference": "fa2f0d4410a11008cb36b379177291be7ee9e4f6",
                 "shasum": ""
             },
             "require": {
@@ -31,7 +31,8 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8",
-                "scrutinizer/ocular": "^1.1"
+                "scrutinizer/ocular": "^1.1",
+                "squizlabs/php_codesniffer": "^2.5"
             },
             "suggest": {
                 "ext-sockets": "Use AMQPSocketConnection"
@@ -74,7 +75,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2016-03-02 16:36:48"
+            "time": "2016-04-11 14:30:01"
         },
         {
             "name": "pimple/pimple",

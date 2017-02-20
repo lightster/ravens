@@ -10,8 +10,8 @@ interface ConfigInterface
     public function getAdapterFactoryConfig();
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      * @return array
      */
-    public function getQueueConfig($queue_name);
+    public function getQueueConfig($queue_key);
 }

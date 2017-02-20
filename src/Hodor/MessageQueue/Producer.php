@@ -36,22 +36,22 @@ class Producer
     }
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      * @return ProducerQueue
      */
-    public function getQueue($queue_name)
+    public function getQueue($queue_key)
     {
-        if (isset($this->producer_queues[$queue_name])) {
-            return $this->producer_queues[$queue_name];
+        if (isset($this->producer_queues[$queue_key])) {
+            return $this->producer_queues[$queue_key];
         }
 
-        $this->checkQueueName($queue_name);
+        $this->checkQueueKey($queue_key);
 
-        $this->producer_queues[$queue_name] = new ProducerQueue(function ($message) use ($queue_name) {
-            $this->push($queue_name, $message);
+        $this->producer_queues[$queue_key] = new ProducerQueue(function ($message) use ($queue_key) {
+            $this->push($queue_key, $message);
         });
 
-        return $this->producer_queues[$queue_name];
+        return $this->producer_queues[$queue_key];
     }
 
     public function beginBatch()
@@ -69,8 +69,8 @@ class Producer
             throw new Exception("The queue is not in transaction.");
         }
 
-        foreach ($this->batches as $queue_name => $batch) {
-            $this->adapter_factory->getProducer($queue_name)->produceMessageBatch($batch);
+        foreach ($this->batches as $queue_key => $batch) {
+            $this->adapter_factory->getProducer($queue_key)->produceMessageBatch($batch);
         }
 
         $this->is_in_batch = false;
@@ -88,24 +88,24 @@ class Producer
     }
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      * @param mixed $message
      */
-    private function push($queue_name, $message)
+    private function push($queue_key, $message)
     {
         if ($this->is_in_batch) {
-            $this->batches[$queue_name][] = new OutgoingMessage($message);
+            $this->batches[$queue_key][] = new OutgoingMessage($message);
             return;
         }
 
-        $this->adapter_factory->getProducer($queue_name)->produceMessage(new OutgoingMessage($message));
+        $this->adapter_factory->getProducer($queue_key)->produceMessage(new OutgoingMessage($message));
     }
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      */
-    private function checkQueueName($queue_name)
+    private function checkQueueKey($queue_key)
     {
-        $this->adapter_factory->getProducer($queue_name);
+        $this->adapter_factory->getProducer($queue_key);
     }
 }

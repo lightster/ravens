@@ -25,34 +25,34 @@ class Consumer
     }
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      * @return ConsumerQueue
      */
-    public function getQueue($queue_name)
+    public function getQueue($queue_key)
     {
-        if (isset($this->consumer_queues[$queue_name])) {
-            return $this->consumer_queues[$queue_name];
+        if (isset($this->consumer_queues[$queue_key])) {
+            return $this->consumer_queues[$queue_key];
         }
 
-        $this->checkQueueName($queue_name);
+        $this->checkQueueKey($queue_key);
 
-        $this->consumer_queues[$queue_name] = new ConsumerQueue(function (callable $callback) use ($queue_name) {
-            $this->consume($queue_name, $callback);
+        $this->consumer_queues[$queue_key] = new ConsumerQueue(function (callable $callback) use ($queue_key) {
+            $this->consume($queue_key, $callback);
         });
 
-        return $this->consumer_queues[$queue_name];
+        return $this->consumer_queues[$queue_key];
     }
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      * @param callable $callback to use for handling the message
      */
-    private function consume($queue_name, callable $callback)
+    private function consume($queue_key, callable $callback)
     {
         $start_time = time();
         $message_count = 0;
 
-        $consumer = $this->adapter_factory->getConsumer($queue_name);
+        $consumer = $this->adapter_factory->getConsumer($queue_key);
 
         $max_message_count = $consumer->getMaxMessagesPerConsume();
         $max_time = $consumer->getMaxTimePerConsume();
@@ -64,10 +64,10 @@ class Consumer
     }
 
     /**
-     * @param string $queue_name
+     * @param string $queue_key
      */
-    private function checkQueueName($queue_name)
+    private function checkQueueKey($queue_key)
     {
-        $this->adapter_factory->getConsumer($queue_name);
+        $this->adapter_factory->getConsumer($queue_key);
     }
 }

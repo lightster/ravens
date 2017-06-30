@@ -41,18 +41,37 @@ class ChannelFactory
      * @param  string $queue_key
      * @return Channel
      */
-    public function getChannel($queue_key)
+    public function getConsumerChannel($queue_key)
     {
-        if (isset($this->channels[$queue_key])) {
-            return $this->channels[$queue_key];
+        return $this->getChannel('consumer', $queue_key);
+    }
+
+    /**
+     * @param  string $queue_key
+     * @return Channel
+     */
+    public function getProducerChannel($queue_key)
+    {
+        return $this->getChannel('producer', $queue_key);
+    }
+
+    /**
+     * @param  string $queue_key
+     * @param  string $use
+     * @return Channel
+     */
+    private function getChannel($use, $queue_key)
+    {
+        if (isset($this->channels["{$use}:{$queue_key}"])) {
+            return $this->channels["{$use}:{$queue_key}"];
         }
 
         $queue_config = $this->getQueueConfig($queue_key);
         $connection = $this->getConnection($queue_config);
 
-        $this->channels[$queue_key] = new Channel($connection, $queue_config);
+        $this->channels["{$use}:{$queue_key}"] = new Channel($connection, $queue_config);
 
-        return $this->channels[$queue_key];
+        return $this->channels["{$use}:{$queue_key}"];
     }
 
     /**

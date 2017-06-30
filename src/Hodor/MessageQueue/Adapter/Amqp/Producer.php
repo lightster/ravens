@@ -88,7 +88,7 @@ class Producer implements ProducerInterface
             return $this->channel;
         }
 
-        $this->channel = $this->channel_factory->getChannel($this->queue_key);
+        $this->channel = $this->channel_factory->getProducerChannel($this->queue_key);
 
         return $this->channel;
     }

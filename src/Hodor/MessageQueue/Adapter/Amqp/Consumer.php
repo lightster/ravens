@@ -80,7 +80,7 @@ class Consumer implements ConsumerInterface
             return $this->channel;
         }
 
-        $this->channel = $this->channel_factory->getChannel($this->queue_key);
+        $this->channel = $this->channel_factory->getConsumerChannel($this->queue_key);
 
         return $this->channel;
     }

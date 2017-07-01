@@ -13,7 +13,7 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::__construct
-     * @covers ::getChannel
+     * @covers ::getConsumerChannel
      * @covers ::<private>
      */
     public function testChannelsCanBeRetrieved()
@@ -23,7 +23,7 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 
         $channel_factory = new ChannelFactory($config);
         foreach ($queues as $queue_key => $queue_config) {
-            $channel = $channel_factory->getChannel($queue_key);
+            $channel = $channel_factory->getConsumerChannel($queue_key);
             $this->assertInstanceOf('Hodor\MessageQueue\Adapter\Amqp\Channel', $channel);
             $this->assertEquals($queue_config['queue_name'], $channel->getQueueName());
         }
@@ -31,7 +31,7 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
-     * @covers ::getChannel
+     * @covers ::getConsumerChannel
      * @covers ::<private>
      */
     public function testChannelsAreReusedIfSameQueueKeyIsRequested()
@@ -40,17 +40,35 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 
         $channel_factory = new ChannelFactory($config);
         $this->assertSame(
-            $channel_factory->getChannel('fast_jobs'),
-            $channel_factory->getChannel('fast_jobs')
+            $channel_factory->getConsumerChannel('fast_jobs'),
+            $channel_factory->getConsumerChannel('fast_jobs')
         );
     }
 
     /**
      * @covers ::__construct
-     * @covers ::getChannel
+     * @covers ::getConsumerChannel
+     * @covers ::getProducerChannel
      * @covers ::<private>
      */
-    public function testConnectionsAreReusedIfSameQueueConfigIsUsed()
+    public function testChannelsAreNotReusedIfUseIsDifferent()
+    {
+        $config = $this->getTestConfig($this->getTestQueues());
+
+        $channel_factory = new ChannelFactory($config);
+        $this->assertNotSame(
+            $channel_factory->getConsumerChannel('fast_jobs'),
+            $channel_factory->getProducerChannel('fast_jobs')
+        );
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::getConsumerChannel
+     * @covers ::getProducerChannel
+     * @covers ::<private>
+     */
+    public function testConnectionsAreReusedEvenIfUseIsDifferent()
     {
         $all_queues = $this->getTestQueues();
         $queues = [
@@ -61,14 +79,15 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 
         $channel_factory = new ChannelFactory($config);
         $this->assertSame(
-            $channel_factory->getChannel('original')->getAmqpChannel()->getConnection(),
-            $channel_factory->getChannel('duplicate')->getAmqpChannel()->getConnection()
+            $channel_factory->getConsumerChannel('original')->getAmqpChannel()->getConnection(),
+            $channel_factory->getProducerChannel('duplicate')->getAmqpChannel()->getConnection()
         );
     }
 
     /**
      * @covers ::__construct
-     * @covers ::getChannel
+     * @covers ::getConsumerChannel
+     * @covers ::getProducerChannel
      * @covers ::disconnectAll
      * @covers ::<private>
      */
@@ -78,8 +97,8 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
         $config = $this->getTestConfig($queues);
 
         $channel_factory = new ChannelFactory($config);
-        $fast_jobs = $channel_factory->getChannel('fast_jobs')->getAmqpChannel()->getConnection();
-        $slow_jobs = $channel_factory->getChannel('slow_jobs')->getAmqpChannel()->getConnection();
+        $fast_jobs = $channel_factory->getProducerChannel('fast_jobs')->getAmqpChannel()->getConnection();
+        $slow_jobs = $channel_factory->getConsumerChannel('slow_jobs')->getAmqpChannel()->getConnection();
 
         $this->assertTrue($fast_jobs->isConnected());
         $this->assertTrue($slow_jobs->isConnected());
@@ -92,7 +111,7 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
-     * @covers ::getChannel
+     * @covers ::getProducerChannel
      * @covers ::<private>
      * @dataProvider provideRequiredQueueConfigOptions
      * @param string $config_key
@@ -106,7 +125,7 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
         $config = $this->getTestConfig(['fast_jobs' => $queue]);
 
         $channel_factory = new ChannelFactory($config);
-        $channel_factory->getChannel('fast_jobs');
+        $channel_factory->getProducerChannel('fast_jobs');
     }
 
     /**

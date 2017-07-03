@@ -17,7 +17,7 @@ class Factory implements FactoryInterface
     /**
      * @var ChannelFactory
      */
-    private $channel_manager;
+    private $channel_factory;
 
     /**
      * @var Consumer[]
@@ -69,11 +69,11 @@ class Factory implements FactoryInterface
 
     public function disconnectAll()
     {
-        if (!$this->channel_manager) {
+        if (!$this->channel_factory) {
             return;
         }
 
-        $this->channel_manager->disconnectAll();
+        $this->channel_factory->disconnectAll();
     }
 
     /**
@@ -81,12 +81,12 @@ class Factory implements FactoryInterface
      */
     private function getChannelFactory()
     {
-        if ($this->channel_manager) {
-            return $this->channel_manager;
+        if ($this->channel_factory) {
+            return $this->channel_factory;
         }
 
-        $this->channel_manager = new ChannelFactory($this->config);
+        $this->channel_factory = new ChannelFactory($this->config);
 
-        return $this->channel_manager;
+        return $this->channel_factory;
     }
 }

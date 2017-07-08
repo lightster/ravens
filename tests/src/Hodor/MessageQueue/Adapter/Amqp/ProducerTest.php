@@ -2,11 +2,10 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
-use Hodor\MessageQueue\Adapter\ConsumerInterface;
+use Hodor\MessageQueue\Adapter\ProducerInterface;
 use Hodor\MessageQueue\Adapter\ProducerTest as BaseProducerTest;
 use Hodor\MessageQueue\Adapter\Testing\Config;
 use Hodor\MessageQueue\IncomingMessage;
-use PHPUnit_Framework_TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Adapter\Amqp\Producer

@@ -12,18 +12,6 @@ class ChannelTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers ::<private>
-     * @dataProvider provideQueueConfigMissingARequiredField
-     * @expectedException \LogicException
-     * @param array $queue_config
-     */
-    public function testExceptionIsThrownIfARequiredFieldIsMissing(array $queue_config)
-    {
-        new Channel($this->getMockConnection(), $queue_config);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::<private>
      */
     public function testConnectionCanBeInstantiatedWithoutError()
     {
@@ -65,20 +53,6 @@ class ChannelTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
-     * @covers ::getQueueName
-     */
-    public function testQueueNamePassedToConstructorIsTheSameRetrieved()
-    {
-        $queue_name = uniqid();
-
-        $connection = $this->getMockConnection();
-        $channel = new Channel($connection, ['queue_name' => $queue_name]);
-
-        $this->assertEquals($queue_name, $channel->getQueueName());
-    }
-
-    /**
-     * @covers ::__construct
      * @covers ::getMaxMessagesPerConsume
      */
     public function testMaxMessagesPerConsumePassedToConstructorIsTheSameRetrieved()
@@ -109,26 +83,6 @@ class ChannelTest extends PHPUnit_Framework_TestCase
         ]);
 
         $this->assertEquals($max_time, $channel->getMaxTimePerConsume());
-    }
-
-    /**
-     * @return array
-     */
-    public function provideQueueConfigMissingARequiredField()
-    {
-        $required_fields = [
-            'queue_name' => uniqid(),
-        ];
-
-        $queue_configs = [];
-        foreach (array_keys($required_fields) as $field_to_remove) {
-            $queue_config = $required_fields;
-            unset($queue_config[$field_to_remove]);
-
-            $queue_configs[] = [$queue_config];
-        }
-
-        return $queue_configs;
     }
 
     /**

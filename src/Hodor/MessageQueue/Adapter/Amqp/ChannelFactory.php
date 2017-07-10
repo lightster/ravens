@@ -30,6 +30,14 @@ class ChannelFactory
         $this->config = $config;
     }
 
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function disconnectAll()
     {
         foreach ($this->connections as $connection) {
@@ -38,7 +46,7 @@ class ChannelFactory
     }
 
     /**
-     * @param  string $queue_key
+     * @param string $queue_key
      * @return Channel
      */
     public function getConsumerChannel($queue_key)
@@ -47,7 +55,7 @@ class ChannelFactory
     }
 
     /**
-     * @param  string $queue_key
+     * @param string $queue_key
      * @return Channel
      */
     public function getProducerChannel($queue_key)

@@ -37,8 +37,8 @@ class ProducerTest extends BaseProducerTest
      */
     protected function getTestProducer(array $config_overrides = [])
     {
-        $channel_factory = $this->generateChannelFactory($this->getTestConfig($config_overrides));
-        $test_producer = new Producer('fast_jobs', $channel_factory);
+        $strategy_factory = $this->generateStrategyFactory($this->getTestConfig($config_overrides));
+        $test_producer = new Producer('fast_jobs', $strategy_factory);
 
         return $test_producer;
     }
@@ -48,8 +48,8 @@ class ProducerTest extends BaseProducerTest
      */
     protected function consumeMessage()
     {
-        $channel_factory = $this->generateChannelFactory($this->getTestConfig());
-        $consumer = new Consumer('fast_jobs', $channel_factory);
+        $strategy_factory = $this->generateStrategyFactory($this->getTestConfig());
+        $consumer = new Consumer('fast_jobs', $strategy_factory);
 
         $consumer->consumeMessage(function (IncomingMessage $message) use (&$return) {
             $return = $message->getContent();
@@ -58,22 +58,24 @@ class ProducerTest extends BaseProducerTest
 
         // disconnect after consuming so the unused channel does not prefetch
         // and hold a message unack'd while another channel is looking for it
-        $channel_factory->disconnectAll();
+        foreach ($this->channel_factories as $channel_factory) {
+            $channel_factory->disconnectAll();
+        }
 
         return $return;
     }
 
     /**
      * @param Config $config
-     * @return ChannelFactory
+     * @return DeliveryStrategyFactory
      */
-    private function generateChannelFactory(Config $config)
+    private function generateStrategyFactory(Config $config)
     {
         $channel_factory = new ChannelFactory($config);
 
         $this->channel_factories[] = $channel_factory;
 
-        return $channel_factory;
+        return new DeliveryStrategyFactory($channel_factory);
     }
 
     /**

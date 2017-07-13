@@ -15,7 +15,7 @@ class Channel
     /**
      * @var array
      */
-    private $queue_config;
+    private $channel_config;
 
     /**
      * @var AMQPChannel
@@ -24,21 +24,19 @@ class Channel
 
     /**
      * @param Connection $connection
-     * @param array $queue_config
+     * @param array $channel_config
      */
-    public function __construct(Connection $connection, array $queue_config)
+    public function __construct(Connection $connection, array $channel_config)
     {
         $this->connection = $connection;
-        $this->queue_config = array_merge(
+        $this->channel_config = array_merge(
             [
                 'fetch_count'              => 1,
                 'max_messages_per_consume' => 1,
                 'max_time_per_consume'     => 600,
             ],
-            $queue_config
+            $channel_config
         );
-
-        $this->validateConfig();
     }
 
     /**
@@ -51,17 +49,9 @@ class Channel
         }
 
         $this->amqp_channel = $this->connection->getAmqpConnection()->channel();
-
-        $this->amqp_channel->queue_declare(
-            $this->queue_config['queue_name'],
-            false,
-            ($is_durable = true),
-            false,
-            false
-        );
         $this->amqp_channel->basic_qos(
             null,
-            $this->queue_config['fetch_count'],
+            $this->channel_config['fetch_count'],
             null
         );
 
@@ -69,19 +59,11 @@ class Channel
     }
 
     /**
-     * @return mixed
-     */
-    public function getQueueName()
-    {
-        return $this->queue_config['queue_name'];
-    }
-
-    /**
      * @return int
      */
     public function getMaxMessagesPerConsume()
     {
-        return $this->queue_config['max_messages_per_consume'];
+        return $this->channel_config['max_messages_per_consume'];
     }
 
     /**
@@ -89,18 +71,6 @@ class Channel
      */
     public function getMaxTimePerConsume()
     {
-        return $this->queue_config['max_time_per_consume'];
-    }
-
-    /**
-     * @throws LogicException
-     */
-    private function validateConfig()
-    {
-        foreach (['queue_name'] as $key) {
-            if (empty($this->queue_config[$key])) {
-                throw new LogicException("The connection config must contain a '{$key}' config.");
-            }
-        }
+        return $this->channel_config['max_time_per_consume'];
     }
 }

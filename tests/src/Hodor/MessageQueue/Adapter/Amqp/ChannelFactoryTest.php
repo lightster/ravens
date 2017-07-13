@@ -13,6 +13,21 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::__construct
+     * @covers ::getConfig
+     * @covers ::<private>
+     */
+    public function testConfigPassedInIsSameConfigRetrieved()
+    {
+        $queues = $this->getTestQueues();
+        $config = $this->getTestConfig($queues);
+
+        $channel_factory = new ChannelFactory($config);
+
+        $this->assertSame($config, $channel_factory->getConfig());
+    }
+
+    /**
+     * @covers ::__construct
      * @covers ::getConsumerChannel
      * @covers ::<private>
      */
@@ -22,10 +37,9 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
         $config = $this->getTestConfig($queues);
 
         $channel_factory = new ChannelFactory($config);
-        foreach ($queues as $queue_key => $queue_config) {
+        foreach (array_keys($queues) as $queue_key) {
             $channel = $channel_factory->getConsumerChannel($queue_key);
             $this->assertInstanceOf('Hodor\MessageQueue\Adapter\Amqp\Channel', $channel);
-            $this->assertEquals($queue_config['queue_name'], $channel->getQueueName());
         }
     }
 

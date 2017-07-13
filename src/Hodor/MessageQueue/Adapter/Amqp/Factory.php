@@ -20,6 +20,11 @@ class Factory implements FactoryInterface
     private $channel_factory;
 
     /**
+     * @var DeliveryStrategyFactory
+     */
+    private $delivery_strategy_factory;
+
+    /**
      * @var Consumer[]
      */
     private $consumers = [];
@@ -47,7 +52,7 @@ class Factory implements FactoryInterface
             return $this->consumers[$queue_key];
         }
 
-        $this->consumers[$queue_key] = new Consumer($queue_key, $this->getChannelFactory());
+        $this->consumers[$queue_key] = new Consumer($queue_key, $this->getDeliveryStrategy());
 
         return $this->consumers[$queue_key];
     }
@@ -62,7 +67,7 @@ class Factory implements FactoryInterface
             return $this->producers[$queue_key];
         }
 
-        $this->producers[$queue_key] = new Producer($queue_key, $this->getChannelFactory());
+        $this->producers[$queue_key] = new Producer($queue_key, $this->getDeliveryStrategy());
 
         return $this->producers[$queue_key];
     }
@@ -77,16 +82,17 @@ class Factory implements FactoryInterface
     }
 
     /**
-     * @return ChannelFactory
+     * @return DeliveryStrategyFactory
      */
-    private function getChannelFactory()
+    private function getDeliveryStrategy()
     {
-        if ($this->channel_factory) {
-            return $this->channel_factory;
+        if ($this->delivery_strategy_factory) {
+            return $this->delivery_strategy_factory;
         }
 
         $this->channel_factory = new ChannelFactory($this->config);
+        $this->delivery_strategy_factory = new DeliveryStrategyFactory($this->channel_factory);
 
-        return $this->channel_factory;
+        return $this->delivery_strategy_factory;
     }
 }

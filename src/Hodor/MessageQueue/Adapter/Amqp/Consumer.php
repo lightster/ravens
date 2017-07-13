@@ -13,23 +13,23 @@ class Consumer implements ConsumerInterface
     private $queue_key;
 
     /**
-     * @var ChannelFactory
+     * @var DeliveryStrategyFactory
      */
-    private $channel_factory;
+    private $strategy_factory;
 
     /**
-     * @var Channel
+     * @var DeliveryStrategy
      */
-    private $channel;
+    private $delivery_strategy;
 
     /**
      * @param string $queue_key
-     * @param ChannelFactory $channel_factory
+     * @param DeliveryStrategyFactory $strategy_factory
      */
-    public function __construct($queue_key, ChannelFactory $channel_factory)
+    public function __construct($queue_key, DeliveryStrategyFactory $strategy_factory)
     {
         $this->queue_key = $queue_key;
-        $this->channel_factory = $channel_factory;
+        $this->strategy_factory = $strategy_factory;
     }
 
     /**
@@ -40,7 +40,7 @@ class Consumer implements ConsumerInterface
         $amqp_channel = $this->getChannel()->getAmqpChannel();
 
         $amqp_channel->basic_consume(
-            $this->getChannel()->getQueueName(),
+            $this->getDeliveryStrategy()->getQueueName(),
             '',
             false,
             ($auto_ack = false),
@@ -72,16 +72,26 @@ class Consumer implements ConsumerInterface
     }
 
     /**
+     * @return DeliveryStrategy
+     */
+    private function getDeliveryStrategy()
+    {
+        if ($this->delivery_strategy) {
+            return $this->delivery_strategy;
+        }
+
+        $this->delivery_strategy = $this->strategy_factory->getProducerStrategy(
+            $this->queue_key
+        );
+
+        return $this->delivery_strategy;
+    }
+
+    /**
      * @return Channel
      */
     private function getChannel()
     {
-        if ($this->channel) {
-            return $this->channel;
-        }
-
-        $this->channel = $this->channel_factory->getConsumerChannel($this->queue_key);
-
-        return $this->channel;
+        return $this->getDeliveryStrategy()->getChannel();
     }
 }

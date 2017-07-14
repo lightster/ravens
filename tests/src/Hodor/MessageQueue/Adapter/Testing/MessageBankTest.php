@@ -64,7 +64,7 @@ class MessageBankTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::consumeMessage
-     * @expectedException \Hodor\MessageQueue\Adapter\Testing\Exception\EmptyQueueException
+     * @expectedException \Hodor\MessageQueue\Exception\TimeoutException
      */
     public function testConsumingWhileNoMessagesAreQueuedThrowsAnException()
     {
@@ -111,7 +111,7 @@ class MessageBankTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::consumeMessage
      * @covers ::produceMessage
-     * @expectedException \Hodor\MessageQueue\Adapter\Testing\Exception\EmptyQueueException
+     * @expectedException \Hodor\MessageQueue\Exception\TimeoutException
      */
     public function testConsumingWhileNoUnreceivedMessagesAreQueuedThrowsAnException()
     {

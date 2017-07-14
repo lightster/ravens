@@ -3,7 +3,9 @@
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
 use Hodor\MessageQueue\Adapter\ConsumerInterface;
+use Hodor\MessageQueue\Exception\TimeoutException;
 use Hodor\MessageQueue\IncomingMessage as MqMessage;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
 
 class Consumer implements ConsumerInterface
 {
@@ -34,9 +36,17 @@ class Consumer implements ConsumerInterface
 
     /**
      * @param callable $callback
+     * @param array|null $options
      */
-    public function consumeMessage(callable $callback)
+    public function consumeMessage(callable $callback, array $options = null)
     {
+        $options = array_merge(
+            [
+                'wait_timeout' => 0,
+            ],
+            (null !== $options ? $options : [])
+        );
+
         $amqp_channel = $this->getChannel()->getAmqpChannel();
 
         $amqp_channel->basic_consume(
@@ -52,7 +62,11 @@ class Consumer implements ConsumerInterface
             }
         );
 
-        $amqp_channel->wait();
+        try {
+            $amqp_channel->wait(null, false, intval($options['wait_timeout']));
+        } catch (AMQPTimeoutException $exception) {
+            throw new TimeoutException();
+        }
     }
 
     /**

@@ -6,8 +6,9 @@ interface ConsumerInterface
 {
     /**
      * @param callable $callback
+     * @param array|null $options
      */
-    public function consumeMessage(callable $callback);
+    public function consumeMessage(callable $callback, array $options = null);
 
     /**
      * @return int

@@ -3,7 +3,7 @@
 namespace Hodor\MessageQueue\Adapter\Testing;
 
 use Exception;
-use Hodor\MessageQueue\Adapter\Testing\Exception\EmptyQueueException;
+use Hodor\MessageQueue\Exception\TimeoutException;
 
 class MessageBank
 {
@@ -53,7 +53,7 @@ class MessageBank
 
     /**
      * @return Message
-     * @throws EmptyQueueException
+     * @throws TimeoutException
      */
     public function consumeMessage()
     {
@@ -64,7 +64,7 @@ class MessageBank
             }
         }
 
-        throw new EmptyQueueException("There are no messages to consume.");
+        throw new TimeoutException("There are no messages to consume.");
     }
 
     public function emulateReconnect()

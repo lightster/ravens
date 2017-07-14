@@ -22,8 +22,9 @@ class Consumer implements ConsumerInterface
 
     /**
      * @param callable $callback
+     * @param array|null $options
      */
-    public function consumeMessage(callable $callback)
+    public function consumeMessage(callable $callback, array $options = null)
     {
         $message_adapter = $this->message_bank->consumeMessage();
         $incoming_message = new IncomingMessage($message_adapter);

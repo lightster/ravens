@@ -26,6 +26,18 @@ abstract class ConsumerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::consumeMessage
+     * @covers ::<private>
+     * @expectedException \Hodor\MessageQueue\Exception\TimeoutException
+     */
+    public function testWaitingForMessageCanBeTimedOut()
+    {
+        $this->getTestConsumer()->consumeMessage(function () {
+            $this->fail('There should have been no message to consume.');
+        }, ['wait_timeout' => 1]);
+    }
+
+    /**
      * @covers ::getMaxMessagesPerConsume
      */
     public function testMaxMessagesPerConsumeIsReturnedAsExpected()

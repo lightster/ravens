@@ -70,16 +70,18 @@ class ChannelFactory
      */
     private function getChannel($use, $queue_key)
     {
-        if (isset($this->channels["{$use}:{$queue_key}"])) {
-            return $this->channels["{$use}:{$queue_key}"];
+        $queue_config = $this->getQueueConfig($queue_key);
+        $channel_key = $this->getChannelKey($use, $queue_config);
+
+        if (isset($this->channels[$channel_key])) {
+            return $this->channels[$channel_key];
         }
 
-        $queue_config = $this->getQueueConfig($queue_key);
         $connection = $this->getConnection($queue_config);
 
-        $this->channels["{$use}:{$queue_key}"] = new Channel($connection, $queue_config);
+        $this->channels[$channel_key] = new Channel($connection, $queue_config);
 
-        return $this->channels["{$use}:{$queue_key}"];
+        return $this->channels[$channel_key];
     }
 
     /**
@@ -136,7 +138,25 @@ class ChannelFactory
                 $queue_config['host'],
                 $queue_config['port'],
                 $queue_config['username'],
-                $queue_config['queue_name'],
+            ]
+        );
+    }
+
+    /**
+     * @param string $use
+     * @param array $queue_config
+     * @return string
+     */
+    private function getChannelKey($use, array $queue_config)
+    {
+        return implode(
+            '::',
+            [
+                $this->getConnectionKey($queue_config),
+                $use,
+                $queue_config['fetch_count'],
+                $queue_config['max_messages_per_consume'],
+                $queue_config['max_time_per_consume'],
             ]
         );
     }

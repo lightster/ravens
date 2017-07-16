@@ -79,6 +79,22 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers ::getConsumerChannel
+     * @covers ::<private>
+     */
+    public function testChannelsAreReusedIfSameChannelSettingsAreUsed()
+    {
+        $config = $this->getTestConfig($this->getTestQueues());
+
+        $channel_factory = new ChannelFactory($config);
+        $this->assertSame(
+            $channel_factory->getConsumerChannel('fast_jobs'),
+            $channel_factory->getConsumerChannel('slow_jobs')
+        );
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::getConsumerChannel
      * @covers ::getProducerChannel
      * @covers ::<private>
      */

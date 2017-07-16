@@ -52,7 +52,7 @@ class Channel
         $this->amqp_channel->basic_qos(
             null,
             $this->channel_config['fetch_count'],
-            null
+            false
         );
 
         return $this->amqp_channel;

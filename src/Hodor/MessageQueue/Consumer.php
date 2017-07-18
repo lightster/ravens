@@ -36,9 +36,11 @@ class Consumer
 
         $this->checkQueueKey($queue_key);
 
-        $this->consumer_queues[$queue_key] = new ConsumerQueue(function (callable $callback) use ($queue_key) {
-            $this->consume($queue_key, $callback);
-        });
+        $this->consumer_queues[$queue_key] = new ConsumerQueue(
+            function (callable $callback, array $options = null) use ($queue_key) {
+                $this->consume($queue_key, $callback, $options);
+            }
+        );
 
         return $this->consumer_queues[$queue_key];
     }
@@ -46,16 +48,25 @@ class Consumer
     /**
      * @param string $queue_key
      * @param callable $callback to use for handling the message
+     * @param array|null $options
      */
-    private function consume($queue_key, callable $callback)
+    private function consume($queue_key, callable $callback, array $options = null)
     {
+        $options = array_merge(
+            [
+                'soft_time_limit'   => 600,
+                'max_message_count' => 1,
+            ],
+            (null !== $options ? $options : [])
+        );
+
         $start_time = time();
         $message_count = 0;
 
         $consumer = $this->adapter_factory->getConsumer($queue_key);
 
-        $max_message_count = $consumer->getMaxMessagesPerConsume();
-        $max_time = $consumer->getMaxTimePerConsume();
+        $max_message_count = max(1, intval($options['max_message_count']));
+        $max_time = intval($options['soft_time_limit']);
 
         do {
             $consumer->consumeMessage($callback);

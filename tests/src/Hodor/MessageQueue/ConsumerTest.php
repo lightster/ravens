@@ -33,8 +33,8 @@ class ConsumerTest extends PHPUnit_Framework_TestCase
 
         $config = new Config([]);
         $config->addQueueConfig('some-queue-name', []);
-        $config->addQueueConfig('multi-message-queue-name', ['max_messages_per_consume' => 5]);
-        $config->addQueueConfig('limited-time-queue', ['max_time_per_consume' => 1, 'max_messages_per_consume' => 5]);
+        $config->addQueueConfig('multi-message-queue-name', []);
+        $config->addQueueConfig('limited-time-queue', []);
         $this->message_bank_factory = new MessageBankFactory();
         $this->adapter_factory = new Factory($config, $this->message_bank_factory);
         $this->consumer = new Consumer($this->adapter_factory);
@@ -77,7 +77,8 @@ class ConsumerTest extends PHPUnit_Framework_TestCase
         $this->consumer->getQueue('multi-message-queue-name')->consume(
             function (IncomingMessage $message) use (&$sum) {
                 $sum += $message->getContent();
-            }
+            },
+            ['max_message_count' => 5]
         );
 
         $this->assertSame(1 + 2 + 3 + 4 + 5, $sum);
@@ -102,7 +103,8 @@ class ConsumerTest extends PHPUnit_Framework_TestCase
             function (IncomingMessage $message) use (&$sum) {
                 sleep(2);
                 $sum += $message->getContent();
-            }
+            },
+            ['soft_time_limit' => 1, 'max_message_count' => 5]
         );
 
         $this->assertSame(1, $sum);

@@ -32,8 +32,6 @@ class Channel
         $this->channel_config = array_merge(
             [
                 'fetch_count'              => 1,
-                'max_messages_per_consume' => 1,
-                'max_time_per_consume'     => 600,
             ],
             $channel_config
         );
@@ -56,21 +54,5 @@ class Channel
         );
 
         return $this->amqp_channel;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxMessagesPerConsume()
-    {
-        return $this->channel_config['max_messages_per_consume'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxTimePerConsume()
-    {
-        return $this->channel_config['max_time_per_consume'];
     }
 }

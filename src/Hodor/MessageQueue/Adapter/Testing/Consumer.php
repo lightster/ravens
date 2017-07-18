@@ -29,22 +29,6 @@ class Consumer implements ConsumerInterface
         $message_adapter = $this->message_bank->consumeMessage();
         $incoming_message = new IncomingMessage($message_adapter);
 
-        $callback($incoming_message);
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxMessagesPerConsume()
-    {
-        return $this->message_bank->getMaxMessagesPerConsume();
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxTimePerConsume()
-    {
-        return $this->message_bank->getMaxTimePerConsume();
+        $callback($incoming_message, $options);
     }
 }

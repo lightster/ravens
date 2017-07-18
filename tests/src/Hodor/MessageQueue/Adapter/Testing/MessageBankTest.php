@@ -12,57 +12,6 @@ class MessageBankTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::__construct
-     * @covers ::getMaxMessagesPerConsume
-     */
-    public function testMaxMessagesPerConsumePassedToConstructorIsTheSameRetrieved()
-    {
-        $max_messages = rand(1, 100);
-
-        $message_bank = new MessageBank([
-            'max_messages_per_consume' => $max_messages,
-        ]);
-
-        $this->assertEquals($max_messages, $message_bank->getMaxMessagesPerConsume());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::getMaxMessagesPerConsume
-     */
-    public function testMaxMessagesPerConsumePassedToConstructorCanBeDefaulted()
-    {
-        $message_bank = new MessageBank();
-
-        $this->assertEquals(1, $message_bank->getMaxMessagesPerConsume());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::getMaxTimePerConsume
-     */
-    public function testMaxTimePerConsumePassedToConstructorIsTheSameRetrieved()
-    {
-        $max_time = rand(1, 100);
-
-        $message_bank = new MessageBank([
-            'max_time_per_consume' => $max_time,
-        ]);
-
-        $this->assertEquals($max_time, $message_bank->getMaxTimePerConsume());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::getMaxTimePerConsume
-     */
-    public function testMaxTimePerConsumePassedToConstructorCanBeDefaulted()
-    {
-        $message_bank = new MessageBank();
-
-        $this->assertEquals(600, $message_bank->getMaxTimePerConsume());
-    }
-
-    /**
      * @covers ::consumeMessage
      * @expectedException \Hodor\MessageQueue\Exception\TimeoutException
      */

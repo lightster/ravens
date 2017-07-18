@@ -37,6 +37,7 @@ class Consumer implements ConsumerInterface
     /**
      * @param callable $callback
      * @param array|null $options
+     * @throws TimeoutException
      */
     public function consumeMessage(callable $callback, array $options = null)
     {
@@ -67,22 +68,6 @@ class Consumer implements ConsumerInterface
         } catch (AMQPTimeoutException $exception) {
             throw new TimeoutException();
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxMessagesPerConsume()
-    {
-        return $this->getChannel()->getMaxMessagesPerConsume();
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxTimePerConsume()
-    {
-        return $this->getChannel()->getMaxTimePerConsume();
     }
 
     /**

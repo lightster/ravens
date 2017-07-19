@@ -38,40 +38,6 @@ abstract class ConsumerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getMaxMessagesPerConsume
-     */
-    public function testMaxMessagesPerConsumeIsReturnedAsExpected()
-    {
-        $max_messages_per_consume = 3;
-
-        $config_overrides = [
-            'max_messages_per_consume' => $max_messages_per_consume
-        ];
-
-        $this->assertSame(
-            $max_messages_per_consume,
-            $this->getTestConsumer($config_overrides)->getMaxMessagesPerConsume()
-        );
-    }
-
-    /**
-     * @covers ::getMaxTimePerConsume
-     */
-    public function testMaxTimePerConsumeIsReturnedAsExpected()
-    {
-        $max_time_per_consume = 60;
-
-        $config_overrides = [
-            'max_time_per_consume' => $max_time_per_consume
-        ];
-
-        $this->assertSame(
-            $max_time_per_consume,
-            $this->getTestConsumer($config_overrides)->getMaxTimePerConsume()
-        );
-    }
-
-    /**
      * @param array $config_overrides
      * @return ConsumerInterface
      */

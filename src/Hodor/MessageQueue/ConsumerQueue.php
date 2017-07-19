@@ -19,9 +19,10 @@ class ConsumerQueue
 
     /**
      * @param callable $callback
+     * @param array|null $options
      */
-    public function consume(callable $callback)
+    public function consume(callable $callback, array $options = null)
     {
-        call_user_func($this->consumer, $callback);
+        call_user_func($this->consumer, $callback, $options);
     }
 }

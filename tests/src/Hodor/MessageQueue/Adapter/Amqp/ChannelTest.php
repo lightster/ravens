@@ -52,40 +52,6 @@ class ChannelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::getMaxMessagesPerConsume
-     */
-    public function testMaxMessagesPerConsumePassedToConstructorIsTheSameRetrieved()
-    {
-        $max_messages = rand(1, 100);
-
-        $connection = $this->getMockConnection();
-        $channel = new Channel($connection, [
-            'queue_name'               => uniqid(),
-            'max_messages_per_consume' => $max_messages,
-        ]);
-
-        $this->assertEquals($max_messages, $channel->getMaxMessagesPerConsume());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::getMaxTimePerConsume
-     */
-    public function testMaxTimePerConsumePassedToConstructorIsTheSameRetrieved()
-    {
-        $max_time = rand(1, 100);
-
-        $connection = $this->getMockConnection();
-        $channel = new Channel($connection, [
-            'queue_name'           => uniqid(),
-            'max_time_per_consume' => $max_time
-        ]);
-
-        $this->assertEquals($max_time, $channel->getMaxTimePerConsume());
-    }
-
-    /**
      * @return array
      */
     public function provideQueueList()

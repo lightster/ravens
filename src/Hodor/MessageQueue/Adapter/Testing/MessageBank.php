@@ -13,17 +13,16 @@ class MessageBank
     private $messages = [];
 
     /**
+     * @var array
+     */
+    private $queue_config;
+
+    /**
      * @param array $queue_config
      */
     public function __construct(array $queue_config = [])
     {
-        $this->queue_config = array_merge(
-            [
-                'max_messages_per_consume' => 1,
-                'max_time_per_consume'     => 600,
-            ],
-            $queue_config
-        );
+        $this->queue_config = $queue_config;
     }
 
     /**
@@ -76,21 +75,5 @@ class MessageBank
                 $this->produceMessage($message['content']);
             }
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxMessagesPerConsume()
-    {
-        return $this->queue_config['max_messages_per_consume'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxTimePerConsume()
-    {
-        return $this->queue_config['max_time_per_consume'];
     }
 }

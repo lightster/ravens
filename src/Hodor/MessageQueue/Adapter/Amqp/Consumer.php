@@ -54,7 +54,7 @@ class Consumer implements ConsumerInterface
             $this->getDeliveryStrategy()->getQueueName(),
             '',
             false,
-            ($auto_ack = false),
+            false,
             false,
             false,
             function ($amqp_message) use ($callback) {

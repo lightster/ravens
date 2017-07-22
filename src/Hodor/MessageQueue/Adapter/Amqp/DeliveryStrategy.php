@@ -60,7 +60,7 @@ class DeliveryStrategy
         $this->channel->getAmqpChannel()->queue_declare(
             $this->queue_config['queue_name'],
             false,
-            ($is_durable = true),
+            true,
             false,
             false
         );

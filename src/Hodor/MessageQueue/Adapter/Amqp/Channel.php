@@ -2,7 +2,6 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
-use LogicException;
 use PhpAmqpLib\Channel\AMQPChannel;
 
 class Channel

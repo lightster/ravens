@@ -38,7 +38,7 @@ class ConsumerTest extends BaseConsumerTest
     protected function getTestConsumer(array $config_overrides = [])
     {
         $strategy_factory = $this->generateStrategyFactory($this->getTestConfig($config_overrides));
-        $test_consumer = new Consumer('fast_jobs', $strategy_factory);
+        $test_consumer = new Consumer($strategy_factory->getConsumerStrategy('fast_jobs'));
 
         return $test_consumer;
     }
@@ -49,7 +49,7 @@ class ConsumerTest extends BaseConsumerTest
     protected function produceMessage(OutgoingMessage $message)
     {
         $strategy_factory = $this->generateStrategyFactory($this->getTestConfig());
-        $producer = new Producer('fast_jobs', $strategy_factory);
+        $producer = new Producer($strategy_factory->getProducerStrategy('fast_jobs'));
 
         $producer->produceMessage($message);
     }

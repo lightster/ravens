@@ -52,7 +52,8 @@ class Factory implements FactoryInterface
             return $this->consumers[$queue_key];
         }
 
-        $this->consumers[$queue_key] = new Consumer($queue_key, $this->getDeliveryStrategy());
+        $delivery_strategy = $this->getDeliveryStrategyFactory()->getConsumerStrategy($queue_key);
+        $this->consumers[$queue_key] = new Consumer($delivery_strategy);
 
         return $this->consumers[$queue_key];
     }
@@ -67,7 +68,8 @@ class Factory implements FactoryInterface
             return $this->producers[$queue_key];
         }
 
-        $this->producers[$queue_key] = new Producer($queue_key, $this->getDeliveryStrategy());
+        $delivery_strategy = $this->getDeliveryStrategyFactory()->getProducerStrategy($queue_key);
+        $this->producers[$queue_key] = new Producer($delivery_strategy);
 
         return $this->producers[$queue_key];
     }
@@ -84,7 +86,7 @@ class Factory implements FactoryInterface
     /**
      * @return DeliveryStrategyFactory
      */
-    private function getDeliveryStrategy()
+    private function getDeliveryStrategyFactory()
     {
         if ($this->delivery_strategy_factory) {
             return $this->delivery_strategy_factory;

@@ -38,7 +38,7 @@ class ProducerTest extends BaseProducerTest
     protected function getTestProducer(array $config_overrides = [])
     {
         $strategy_factory = $this->generateStrategyFactory($this->getTestConfig($config_overrides));
-        $test_producer = new Producer('fast_jobs', $strategy_factory);
+        $test_producer = new Producer($strategy_factory->getProducerStrategy('fast_jobs'));
 
         return $test_producer;
     }
@@ -49,7 +49,7 @@ class ProducerTest extends BaseProducerTest
     protected function consumeMessage()
     {
         $strategy_factory = $this->generateStrategyFactory($this->getTestConfig());
-        $consumer = new Consumer('fast_jobs', $strategy_factory);
+        $consumer = new Consumer($strategy_factory->getConsumerStrategy('fast_jobs'));
 
         $consumer->consumeMessage(function (IncomingMessage $message) use (&$return) {
             $return = $message->getContent();

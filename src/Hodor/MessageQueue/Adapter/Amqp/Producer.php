@@ -10,28 +10,16 @@ use RuntimeException;
 class Producer implements ProducerInterface
 {
     /**
-     * @var string
-     */
-    private $queue_key;
-
-    /**
-     * @var DeliveryStrategyFactory
-     */
-    private $strategy_factory;
-
-    /**
      * @var DeliveryStrategy
      */
     private $delivery_strategy;
 
     /**
-     * @param string $queue_key
-     * @param DeliveryStrategyFactory $strategy_factory
+     * @param DeliveryStrategy $delivery_strategy
      */
-    public function __construct($queue_key, DeliveryStrategyFactory $strategy_factory)
+    public function __construct(DeliveryStrategy $delivery_strategy)
     {
-        $this->queue_key = $queue_key;
-        $this->strategy_factory = $strategy_factory;
+        $this->delivery_strategy = $delivery_strategy;
     }
 
     /**
@@ -84,14 +72,6 @@ class Producer implements ProducerInterface
      */
     private function getDeliveryStrategy()
     {
-        if ($this->delivery_strategy) {
-            return $this->delivery_strategy;
-        }
-
-        $this->delivery_strategy = $this->strategy_factory->getProducerStrategy(
-            $this->queue_key
-        );
-
         return $this->delivery_strategy;
     }
 

@@ -12,3 +12,10 @@ PHP library for connecting to RabbitMQ
  - PHP >= 5.5.18
  - Composer
  - RabbitMQ
+
+## Development Env Tips
+
+ - Set test RabbitMQ queues to automatically delete after 10 minutes
+    ```
+    rabbitmqctl set_policy expire-test-hodor "test-hodor-.*" '{"expires":600000}' --apply-to queues
+    ```

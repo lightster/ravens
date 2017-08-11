@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  rabbitmq:
+    user: 'rabbitmq'
+    image: rabbitmq:3.6-management
+    restart: always
+    ports:
+      - 5672
+      - 15672
+    hostname: rabbitmq
+  php:
+    build: .
+    volumes:
+      - .:/ravens

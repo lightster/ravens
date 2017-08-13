@@ -1,0 +1,8 @@
+tests
+
+.codeclimate.yml
+.gitignore
+.travis.yml
+docker-compose.yml
+Dockerfile
+README.md

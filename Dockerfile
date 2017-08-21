@@ -16,8 +16,11 @@ RUN apt-get update -qq \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
 
-ADD https://getcomposer.org/installer composer-setup.php
-RUN php composer-setup.php --quiet --install-dir=/usr/local/bin --filename=composer
+ADD https://getcomposer.org/installer /usr/local/bin/composer-setup.php
+RUN php /usr/local/bin/composer-setup.php \
+    --quiet \
+    --install-dir=/usr/local/bin \
+    --filename=composer
 
 COPY docker/fs /
 COPY . /ravens

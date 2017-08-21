@@ -6,7 +6,7 @@ case "$1" in
         ;;
 
     shell)
-        CMD_PREFIX='bash docker/fs/usr/local/bin/entrypoint.sh'
+        CMD_PREFIX='bash docker/fs/usr/local/bin/entrypoint.sh shell'
         ;;
 
     bash)

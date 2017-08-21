@@ -22,7 +22,12 @@ RUN php composer-setup.php --quiet --install-dir=/usr/local/bin --filename=compo
 COPY docker/fs /
 COPY . /ravens
 
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+    /usr/local/bin/wait-for-it.sh
+
+RUN chmod 0755 /usr/local/bin/*.sh
+
 VOLUME [ "/ravens" ]
 WORKDIR /ravens
 
-ENTRYPOINT ["bash", "/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["bash", "/usr/local/bin/entrypoint.sh", "docker"]

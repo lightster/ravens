@@ -11,3 +11,5 @@ services:
     build: .
     volumes:
       - .:/ravens
+    depends_on:
+      - rabbitmq

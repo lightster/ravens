@@ -16,13 +16,21 @@ RUN apt-get update -qq \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
 
-ADD https://getcomposer.org/installer composer-setup.php
-RUN php composer-setup.php --quiet --install-dir=/usr/local/bin --filename=composer
+ADD https://getcomposer.org/installer /usr/local/bin/composer-setup.php
+RUN php /usr/local/bin/composer-setup.php \
+    --quiet \
+    --install-dir=/usr/local/bin \
+    --filename=composer
 
 COPY docker/fs /
 COPY . /ravens
 
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+    /usr/local/bin/wait-for-it.sh
+
+RUN chmod 0755 /usr/local/bin/*.sh
+
 VOLUME [ "/ravens" ]
 WORKDIR /ravens
 
-ENTRYPOINT ["bash", "/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["bash", "/usr/local/bin/entrypoint.sh", "docker"]

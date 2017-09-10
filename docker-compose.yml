@@ -1,14 +1,18 @@
 version: '3.3'
 services:
   rabbitmq:
-    build: docker/services/rabbitmq
+    build:
+      context: .
+      dockerfile: docker/rabbitmq/Dockerfile
     restart: always
     ports:
       - 5672
       - 15672
     hostname: rabbitmq
   php:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     volumes:
       - .:/ravens
       - ~/.composer/:/root/.composer

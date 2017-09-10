@@ -22,7 +22,7 @@ RUN php /usr/local/bin/composer-setup.php \
     --install-dir=/usr/local/bin \
     --filename=composer
 
-COPY docker/fs /
+COPY docker/php/fs /
 COPY . /ravens
 
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \

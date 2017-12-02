@@ -7,7 +7,9 @@ MAINTAINER Matt Light <matt.light@lightdatasys.com>
 # sockets is for phpamqplib
 # zip is for composer
 
-RUN apk add --no-cache \
+RUN apk add --no-cache --virtual '.lightster-phpize-deps' \
+        $PHPIZE_DEPS \
+    && apk add --no-cache \
         bash \
         git \
         zlib-dev \
@@ -15,10 +17,9 @@ RUN apk add --no-cache \
         bcmath \
         sockets \
         zip \
-    && apk add --no-cache $PHPIZE_DEPS \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
-    && apk del --no-cache $PHPIZE_DEPS
+    && apk del --no-cache .lightster-phpize-deps
 
 ADD https://getcomposer.org/installer /usr/local/bin/composer-setup.php
 RUN php /usr/local/bin/composer-setup.php \
@@ -27,7 +28,6 @@ RUN php /usr/local/bin/composer-setup.php \
     --filename=composer
 
 COPY docker/php/fs /
-COPY . /ravens
 
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
     /usr/local/bin/wait-for-it.sh

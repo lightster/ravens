@@ -18,8 +18,5 @@ services:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
       - .:/ravens
       - ~/.composer/:/root/.composer
-      - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}
-    environment:
-      - SSH_AUTH_SOCK=${SSH_AUTH_SOCK}
     depends_on:
       - rabbitmq

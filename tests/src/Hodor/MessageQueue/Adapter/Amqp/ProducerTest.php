@@ -45,6 +45,7 @@ class ProducerTest extends BaseProducerTest
 
     /**
      * @return string
+     * @throws \Hodor\MessageQueue\Exception\TimeoutException
      */
     protected function consumeMessage()
     {

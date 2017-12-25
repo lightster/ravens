@@ -29,8 +29,8 @@ class Producer implements ProducerInterface
     {
         $this->getChannel()->getAmqpChannel()->basic_publish(
             $this->generateAmqpMessage($message),
-            '',
-            $this->getDeliveryStrategy()->getQueueName()
+            $this->getDeliveryStrategy()->getExchangeName(),
+            $this->getDeliveryStrategy()->getRoutingKey()
         );
     }
 
@@ -44,8 +44,8 @@ class Producer implements ProducerInterface
         foreach ($messages as $message) {
             $amqp_channel->batch_basic_publish(
                 $this->generateAmqpMessage($message),
-                '',
-                $this->getDeliveryStrategy()->getQueueName()
+                $this->getDeliveryStrategy()->getExchangeName(),
+                $this->getDeliveryStrategy()->getRoutingKey()
             );
         }
         $amqp_channel->publish_batch();

@@ -55,6 +55,22 @@ class DeliveryStrategy
         return $this->queue_config['queue_name'];
     }
 
+    /**
+     * @return string
+     */
+    public function getExchangeName()
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoutingKey()
+    {
+        return $this->queue_config['queue_name'];
+    }
+
     private function initialize()
     {
         $this->channel->getAmqpChannel()->queue_declare(

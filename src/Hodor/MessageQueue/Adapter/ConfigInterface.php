@@ -5,7 +5,7 @@ namespace Hodor\MessageQueue\Adapter;
 interface ConfigInterface
 {
     /**
-     * @return string
+     * @return array
      */
     public function getAdapterFactoryConfig();
 

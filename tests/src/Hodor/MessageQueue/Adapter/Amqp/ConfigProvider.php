@@ -8,19 +8,6 @@ use PHPUnit_Framework_TestCase;
 class ConfigProvider
 {
     /**
-     * @var PHPUnit_Framework_TestCase
-     */
-    private $test_case;
-
-    /**
-     * @param PHPUnit_Framework_TestCase $test_case
-     */
-    public function __construct(PHPUnit_Framework_TestCase $test_case)
-    {
-        $this->test_case = $test_case;
-    }
-
-    /**
      * @param array $queues
      * @param array $config_overrides
      * @return Config

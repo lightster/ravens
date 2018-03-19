@@ -96,7 +96,7 @@ class DeliveryStrategyFactoryTest extends PHPUnit_Framework_TestCase
      */
     private function getTestConfig(array $queues)
     {
-        $config_provider = new ConfigProvider($this);
+        $config_provider = new ConfigProvider();
 
         return $config_provider->getConfigAdapter($queues);
     }
@@ -106,7 +106,7 @@ class DeliveryStrategyFactoryTest extends PHPUnit_Framework_TestCase
      */
     private function getTestQueues()
     {
-        $config_provider = new ConfigProvider($this);
+        $config_provider = new ConfigProvider();
 
         return [
             'fast_jobs' => $config_provider->getQueueConfig(),

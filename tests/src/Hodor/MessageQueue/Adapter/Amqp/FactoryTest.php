@@ -77,7 +77,7 @@ class FactoryTest extends BaseFactoryTest
             return $this->config;
         }
 
-        $config_provider = new ConfigProvider($this);
+        $config_provider = new ConfigProvider();
         $test_queues = $this->getTestQueues($config_provider);
         $this->config = $config_provider->getConfigAdapter($test_queues, $config_overrides);
 

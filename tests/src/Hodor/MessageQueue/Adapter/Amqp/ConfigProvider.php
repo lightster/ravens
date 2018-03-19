@@ -3,7 +3,6 @@
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
 use Hodor\MessageQueue\Adapter\Testing\Config;
-use PHPUnit_Framework_TestCase;
 
 class ConfigProvider
 {

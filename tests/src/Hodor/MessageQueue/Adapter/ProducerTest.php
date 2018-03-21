@@ -2,7 +2,6 @@
 
 namespace Hodor\MessageQueue\Adapter;
 
-use Hodor\MessageQueue\IncomingMessage;
 use Hodor\MessageQueue\OutgoingMessage;
 use PHPUnit_Framework_TestCase;
 
@@ -44,10 +43,9 @@ abstract class ProducerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $config_overrides
      * @return ProducerInterface
      */
-    abstract protected function getTestProducer(array $config_overrides = []);
+    abstract protected function getTestProducer();
 
     /**
      * @return string $expected_message

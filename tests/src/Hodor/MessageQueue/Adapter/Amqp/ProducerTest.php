@@ -2,9 +2,9 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
+use Hodor\MessageQueue\Adapter\ConfigInterface;
 use Hodor\MessageQueue\Adapter\ProducerInterface;
 use Hodor\MessageQueue\Adapter\ProducerTest as BaseProducerTest;
-use Hodor\MessageQueue\Adapter\Testing\Config;
 use Hodor\MessageQueue\IncomingMessage;
 
 /**
@@ -18,9 +18,14 @@ class ProducerTest extends BaseProducerTest
     private $channel_factories;
 
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
+
+    public function setUp()
+    {
+        $this->config = ConfigProvider::getConfigAdapter(['only_q']);
+    }
 
     public function tearDown()
     {
@@ -32,13 +37,12 @@ class ProducerTest extends BaseProducerTest
     }
 
     /**
-     * @param array $config_overrides
      * @return ProducerInterface
      */
-    protected function getTestProducer(array $config_overrides = [])
+    protected function getTestProducer()
     {
-        $strategy_factory = $this->generateStrategyFactory($this->getTestConfig($config_overrides));
-        $test_producer = new Producer($strategy_factory->getProducerStrategy('fast_jobs'));
+        $strategy_factory = $this->generateStrategyFactory();
+        $test_producer = new Producer($strategy_factory->getProducerStrategy('only_q'));
 
         return $test_producer;
     }
@@ -49,8 +53,8 @@ class ProducerTest extends BaseProducerTest
      */
     protected function consumeMessage()
     {
-        $strategy_factory = $this->generateStrategyFactory($this->getTestConfig());
-        $consumer = new Consumer($strategy_factory->getConsumerStrategy('fast_jobs'));
+        $strategy_factory = $this->generateStrategyFactory();
+        $consumer = new Consumer($strategy_factory->getConsumerStrategy('only_q'));
 
         $consumer->consumeMessage(function (IncomingMessage $message) use (&$return) {
             $return = $message->getContent();
@@ -67,43 +71,14 @@ class ProducerTest extends BaseProducerTest
     }
 
     /**
-     * @param Config $config
      * @return DeliveryStrategyFactory
      */
-    private function generateStrategyFactory(Config $config)
+    private function generateStrategyFactory()
     {
-        $channel_factory = new ChannelFactory($config);
+        $channel_factory = new ChannelFactory($this->config);
 
         $this->channel_factories[] = $channel_factory;
 
         return new DeliveryStrategyFactory($channel_factory);
-    }
-
-    /**
-     * @param array $config_overrides
-     * @return Config
-     */
-    private function getTestConfig(array $config_overrides = [])
-    {
-        if ($this->config) {
-            return $this->config;
-        }
-
-        $config_provider = new ConfigProvider();
-        $test_queues = $this->getTestQueues($config_provider);
-        $this->config = $config_provider->getConfigAdapter($test_queues, $config_overrides);
-
-        return $this->config;
-    }
-
-    /**
-     * @param ConfigProvider $config_provider
-     * @return array
-     */
-    private function getTestQueues(ConfigProvider $config_provider)
-    {
-        return [
-            'fast_jobs' => $config_provider->getQueueConfig(),
-        ];
     }
 }

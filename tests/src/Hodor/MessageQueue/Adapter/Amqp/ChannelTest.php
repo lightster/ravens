@@ -24,12 +24,10 @@ class ChannelTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers ::getAmqpChannel
-     * @dataProvider provideQueueList
-     * @param array $queues
      */
-    public function testAmqpChannelsCanBeRetrieved(array $queues)
+    public function testAmqpChannelsCanBeRetrieved()
     {
-        foreach ($queues as $queue_config) {
+        foreach ($this->getQueueConfigs() as $queue_config) {
             $connection = new Connection($queue_config);
             $channel = new Channel($connection, $queue_config);
             $this->assertInstanceOf('PhpAmqpLib\Channel\AMQPChannel', $channel->getAmqpChannel());
@@ -39,12 +37,10 @@ class ChannelTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      * @covers ::getAmqpChannel
-     * @dataProvider provideQueueList
-     * @param array $queues
      */
-    public function testAmqpChannelsCanBeReused(array $queues)
+    public function testAmqpChannelsCanBeReused()
     {
-        foreach ($queues as $queue_config) {
+        foreach ($this->getQueueConfigs() as $queue_config) {
             $connection = new Connection($queue_config);
             $channel = new Channel($connection, $queue_config);
             $this->assertSame($channel->getAmqpChannel(), $channel->getAmqpChannel());
@@ -54,17 +50,11 @@ class ChannelTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function provideQueueList()
+    public function getQueueConfigs()
     {
-        $config_provider = new ConfigProvider();
-
         return [
-            [
-                [
-                    'fast_jobs' => $config_provider->getQueueConfig(),
-                    'slow_jobs' => $config_provider->getQueueConfig(),
-                ]
-            ]
+            'q_one' => ConfigProvider::getQueueConfig(),
+            'q_two' => ConfigProvider::getQueueConfig(),
         ];
     }
 

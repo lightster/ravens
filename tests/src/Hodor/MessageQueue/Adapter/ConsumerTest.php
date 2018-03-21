@@ -38,10 +38,9 @@ abstract class ConsumerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $config_overrides
      * @return ConsumerInterface
      */
-    abstract protected function getTestConsumer(array $config_overrides = []);
+    abstract protected function getTestConsumer();
 
     /**
      * @param OutgoingMessage $message

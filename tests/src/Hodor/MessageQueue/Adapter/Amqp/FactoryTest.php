@@ -2,9 +2,7 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
-use Hodor\MessageQueue\Adapter\FactoryInterface;
 use Hodor\MessageQueue\Adapter\FactoryTest as BaseFactoryTest;
-use Hodor\MessageQueue\Adapter\Testing\Config;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Adapter\Amqp\Factory
@@ -15,11 +13,6 @@ class FactoryTest extends BaseFactoryTest
      * @var Factory[]
      */
     private $factories;
-
-    /**
-     * @var Config
-     */
-    private $config;
 
     public function tearDown()
     {
@@ -48,7 +41,7 @@ class FactoryTest extends BaseFactoryTest
     {
         $test_factory = $this->getTestFactory();
 
-        $test_factory->getProducer('fast_jobs');
+        $test_factory->getProducer('only_q');
         $test_factory->disconnectAll();
 
         $this->assertTrue(true);
@@ -60,38 +53,11 @@ class FactoryTest extends BaseFactoryTest
      */
     protected function getTestFactory(array $config_overrides = [])
     {
-        $test_factory = new Factory($this->getTestConfig($config_overrides));
+        $config = ConfigProvider::getConfigAdapter(['only_q'], $config_overrides);
+        $test_factory = new Factory($config);
 
         $this->factories[] = $test_factory;
 
         return $test_factory;
-    }
-
-    /**
-     * @param array $config_overrides
-     * @return Config
-     */
-    private function getTestConfig(array $config_overrides = [])
-    {
-        if ($this->config) {
-            return $this->config;
-        }
-
-        $config_provider = new ConfigProvider();
-        $test_queues = $this->getTestQueues($config_provider);
-        $this->config = $config_provider->getConfigAdapter($test_queues, $config_overrides);
-
-        return $this->config;
-    }
-
-    /**
-     * @param ConfigProvider $config_provider
-     * @return array
-     */
-    private function getTestQueues(ConfigProvider $config_provider)
-    {
-        return [
-            'fast_jobs' => $config_provider->getQueueConfig(),
-        ];
     }
 }

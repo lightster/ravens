@@ -8,10 +8,9 @@ class ConfigProvider
 {
     /**
      * @param array $queues
-     * @param array $config_overrides
      * @return Config
      */
-    public static function getConfigAdapter(array $queues, array $config_overrides = [])
+    public static function getConfigAdapter(array $queues)
     {
         $config = new Config([]);
         foreach ($queues as $queue_key => $queue_config) {
@@ -20,7 +19,6 @@ class ConfigProvider
                 $queue_config = self::getQueueConfig();
             }
 
-            $queue_config = array_merge($queue_config, $config_overrides);
             $config->addQueueConfig($queue_key, $queue_config);
         }
 

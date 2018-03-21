@@ -11,11 +11,10 @@ use Hodor\MessageQueue\Adapter\FactoryTest as BaseFactoryTest;
 class FactoryTest extends BaseFactoryTest
 {
     /**
-     * @param array $config_overrides
      * @return Factory
      */
-    protected function getTestFactory(array $config_overrides = [])
+    protected function getTestFactory()
     {
-        return new Factory(ConfigProvider::getConfigAdapter(['only_q'], $config_overrides));
+        return new Factory(ConfigProvider::getConfigAdapter(['only_q']));
     }
 }

@@ -59,8 +59,7 @@ abstract class FactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $config_overrides
      * @return FactoryInterface
      */
-    abstract protected function getTestFactory(array $config_overrides = []);
+    abstract protected function getTestFactory();
 }

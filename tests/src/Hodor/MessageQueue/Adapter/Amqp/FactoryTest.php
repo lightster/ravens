@@ -48,12 +48,11 @@ class FactoryTest extends BaseFactoryTest
     }
 
     /**
-     * @param array $config_overrides
      * @return Factory
      */
-    protected function getTestFactory(array $config_overrides = [])
+    protected function getTestFactory()
     {
-        $config = ConfigProvider::getConfigAdapter(['only_q'], $config_overrides);
+        $config = ConfigProvider::getConfigAdapter(['only_q']);
         $test_factory = new Factory($config);
 
         $this->factories[] = $test_factory;

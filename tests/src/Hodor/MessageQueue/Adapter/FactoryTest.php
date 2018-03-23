@@ -20,9 +20,9 @@ abstract class FactoryTest extends PHPUnit_Framework_TestCase
 
         $factory = $this->getTestFactory();
 
-        $factory->getProducer('fast_jobs')->produceMessage(new OutgoingMessage($unique_message));
+        $factory->getProducer('only_q')->produceMessage(new OutgoingMessage($unique_message));
 
-        $factory->getConsumer('fast_jobs')->consumeMessage(function (IncomingMessage $message) use ($unique_message) {
+        $factory->getConsumer('only_q')->consumeMessage(function (IncomingMessage $message) use ($unique_message) {
             $this->assertEquals($unique_message, $message->getContent());
             $message->acknowledge();
         });
@@ -38,8 +38,8 @@ abstract class FactoryTest extends PHPUnit_Framework_TestCase
         $factory = $this->getTestFactory();
 
         $this->assertSame(
-            $factory->getProducer('fast_jobs'),
-            $factory->getProducer('fast_jobs')
+            $factory->getProducer('only_q'),
+            $factory->getProducer('only_q')
         );
     }
 
@@ -53,14 +53,13 @@ abstract class FactoryTest extends PHPUnit_Framework_TestCase
         $factory = $this->getTestFactory();
 
         $this->assertSame(
-            $factory->getConsumer('fast_jobs'),
-            $factory->getConsumer('fast_jobs')
+            $factory->getConsumer('only_q'),
+            $factory->getConsumer('only_q')
         );
     }
 
     /**
-     * @param array $config_overrides
      * @return FactoryInterface
      */
-    abstract protected function getTestFactory(array $config_overrides = []);
+    abstract protected function getTestFactory();
 }

@@ -13,23 +13,23 @@ use Hodor\MessageQueue\OutgoingMessage;
 class ConsumerTest extends BaseConsumerTest
 {
     /**
-     * @var MessageBank[]
+     * @var MessageBank
      */
-    private $message_banks = [];
+    private $message_bank;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->message_bank = new MessageBank(ConfigProvider::getQueueConfig());
+    }
 
     /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @param array $config_overrides
      * @return ConsumerInterface
      */
-    protected function getTestConsumer(array $config_overrides = [])
+    protected function getTestConsumer()
     {
-        $message_bank = $this->getMessageBank('fast_jobs', $this->getTestConfig($config_overrides));
-        $test_consumer = new Consumer($message_bank);
+        $test_consumer = new Consumer($this->message_bank);
 
         return $test_consumer;
     }
@@ -39,53 +39,8 @@ class ConsumerTest extends BaseConsumerTest
      */
     protected function produceMessage(OutgoingMessage $message)
     {
-        $message_bank = $this->getMessageBank('fast_jobs', $this->getTestConfig());
-        $producer = new Producer($message_bank);
+        $producer = new Producer($this->message_bank);
 
         $producer->produceMessage($message);
-    }
-
-    /**
-     * @param string $queue_key
-     * @param Config $config
-     * @return MessageBank
-     */
-    private function getMessageBank($queue_key, Config $config)
-    {
-        if (!empty($this->message_banks[$queue_key])) {
-            return $this->message_banks[$queue_key];
-        }
-
-        $this->message_banks[$queue_key] = new MessageBank($config->getQueueConfig($queue_key));
-
-        return $this->message_banks[$queue_key];
-    }
-
-    /**
-     * @param array $config_overrides
-     * @return Config
-     */
-    private function getTestConfig(array $config_overrides = [])
-    {
-        if ($this->config) {
-            return $this->config;
-        }
-
-        $config_provider = new ConfigProvider();
-        $test_queues = $this->getTestQueues($config_provider);
-        $this->config = $config_provider->getConfigAdapter($test_queues, $config_overrides);
-
-        return $this->config;
-    }
-
-    /**
-     * @param ConfigProvider $config_provider
-     * @return array
-     */
-    private function getTestQueues(ConfigProvider $config_provider)
-    {
-        return [
-            'fast_jobs' => $config_provider->getQueueConfig(),
-        ];
     }
 }

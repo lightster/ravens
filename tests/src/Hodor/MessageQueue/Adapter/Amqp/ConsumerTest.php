@@ -22,6 +22,13 @@ class ConsumerTest extends BaseConsumerTest
      */
     private $config;
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->config = ConfigProvider::getConfigAdapter(['only_q']);
+    }
+
     public function tearDown()
     {
         parent::tearDown();
@@ -32,13 +39,12 @@ class ConsumerTest extends BaseConsumerTest
     }
 
     /**
-     * @param array $config_overrides
      * @return ConsumerInterface
      */
-    protected function getTestConsumer(array $config_overrides = [])
+    protected function getTestConsumer()
     {
-        $strategy_factory = $this->generateStrategyFactory($this->getTestConfig($config_overrides));
-        $test_consumer = new Consumer($strategy_factory->getConsumerStrategy('fast_jobs'));
+        $strategy_factory = $this->generateStrategyFactory();
+        $test_consumer = new Consumer($strategy_factory->getConsumerStrategy('only_q'));
 
         return $test_consumer;
     }
@@ -48,50 +54,21 @@ class ConsumerTest extends BaseConsumerTest
      */
     protected function produceMessage(OutgoingMessage $message)
     {
-        $strategy_factory = $this->generateStrategyFactory($this->getTestConfig());
-        $producer = new Producer($strategy_factory->getProducerStrategy('fast_jobs'));
+        $strategy_factory = $this->generateStrategyFactory();
+        $producer = new Producer($strategy_factory->getProducerStrategy('only_q'));
 
         $producer->produceMessage($message);
     }
 
     /**
-     * @param Config $config
      * @return DeliveryStrategyFactory
      */
-    private function generateStrategyFactory(Config $config)
+    private function generateStrategyFactory()
     {
-        $channel_factory = new ChannelFactory($config);
+        $channel_factory = new ChannelFactory($this->config);
 
         $this->channel_factories[] = $channel_factory;
 
         return new DeliveryStrategyFactory($channel_factory);
-    }
-
-    /**
-     * @param array $config_overrides
-     * @return Config
-     */
-    private function getTestConfig(array $config_overrides = [])
-    {
-        if ($this->config) {
-            return $this->config;
-        }
-
-        $config_provider = new ConfigProvider();
-        $test_queues = $this->getTestQueues($config_provider);
-        $this->config = $config_provider->getConfigAdapter($test_queues, $config_overrides);
-
-        return $this->config;
-    }
-
-    /**
-     * @param ConfigProvider $config_provider
-     * @return array
-     */
-    private function getTestQueues(ConfigProvider $config_provider)
-    {
-        return [
-            'fast_jobs' => $config_provider->getQueueConfig(),
-        ];
     }
 }

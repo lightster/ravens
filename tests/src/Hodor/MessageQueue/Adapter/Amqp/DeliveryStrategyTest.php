@@ -38,12 +38,10 @@ class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
      * @covers ::__construct
      * @covers ::getChannel
      * @covers ::<private>
-     * @dataProvider provideQueueList
-     * @param array $queues
      */
-    public function testChannelsCanBeRetrieved(array $queues)
+    public function testChannelsCanBeRetrieved()
     {
-        foreach ($queues as $queue_config) {
+        foreach ($this->getQueueConfigs() as $queue_config) {
             $connection = new Connection($queue_config);
             $channel = new Channel($connection, $queue_config);
             $strategy = new DeliveryStrategy($channel, $queue_config);
@@ -58,12 +56,10 @@ class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
      * @covers ::__construct
      * @covers ::getChannel
      * @covers ::<private>
-     * @dataProvider provideQueueList
-     * @param array $queues
      */
-    public function testChannelsCanBeReused(array $queues)
+    public function testChannelsCanBeReused()
     {
-        foreach ($queues as $queue_config) {
+        foreach ($this->getQueueConfigs() as $queue_config) {
             $connection = new Connection($queue_config);
             $channel = new Channel($connection, $queue_config);
             $strategy = new DeliveryStrategy($channel, $queue_config);
@@ -94,17 +90,11 @@ class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function provideQueueList()
+    public function getQueueConfigs()
     {
-        $config_provider = new ConfigProvider();
-
         return [
-            [
-                [
-                    'fast_jobs' => $config_provider->getQueueConfig(),
-                    'slow_jobs' => $config_provider->getQueueConfig(),
-                ]
-            ]
+            'q_one' => ConfigProvider::getQueueConfig(),
+            'q_two' => ConfigProvider::getQueueConfig(),
         ];
     }
 

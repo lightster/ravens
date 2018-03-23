@@ -2,7 +2,6 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
-use Hodor\MessageQueue\Adapter\Testing\Config;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -18,16 +17,19 @@ class DeliveryStrategyFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testStrategyFactoryReturnsStrategiesWithConfiguredQueueNames()
     {
-        $queues = $this->getTestQueues();
+        $queues = [
+            'q_one' => ['queue_name' => uniqid('q_one_')] + ConfigProvider::getQueueConfig(),
+            'q_two' => ['queue_name' => uniqid('q_two_')] + ConfigProvider::getQueueConfig(),
+        ];
         $strategy_factory = $this->getTestStrategyFactory($queues);
 
         $this->assertSame(
-            $queues['fast_jobs']['queue_name'],
-            $strategy_factory->getProducerStrategy('fast_jobs')->getQueueName()
+            $queues['q_one']['queue_name'],
+            $strategy_factory->getProducerStrategy('q_one')->getQueueName()
         );
         $this->assertSame(
-            $queues['slow_jobs']['queue_name'],
-            $strategy_factory->getConsumerStrategy('slow_jobs')->getQueueName()
+            $queues['q_two']['queue_name'],
+            $strategy_factory->getConsumerStrategy('q_two')->getQueueName()
         );
     }
 
@@ -42,12 +44,12 @@ class DeliveryStrategyFactoryTest extends PHPUnit_Framework_TestCase
         $strategy_factory = $this->getTestStrategyFactory();
 
         $this->assertSame(
-            $strategy_factory->getProducerStrategy('fast_jobs'),
-            $strategy_factory->getProducerStrategy('fast_jobs')
+            $strategy_factory->getProducerStrategy('q_one'),
+            $strategy_factory->getProducerStrategy('q_one')
         );
         $this->assertSame(
-            $strategy_factory->getConsumerStrategy('slow_jobs'),
-            $strategy_factory->getConsumerStrategy('slow_jobs')
+            $strategy_factory->getConsumerStrategy('q_two'),
+            $strategy_factory->getConsumerStrategy('q_two')
         );
     }
 
@@ -59,58 +61,35 @@ class DeliveryStrategyFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testStrategyFactoryUsesSameChannelFactoryPassedToConstructor()
     {
-        $queues = $this->getTestQueues();
-        $config = $this->getTestConfig($queues);
+        $config = ConfigProvider::getConfigAdapter(['q_one', 'q_two']);
 
         $channel_factory = new ChannelFactory($config);
         $strategy_factory = new DeliveryStrategyFactory($channel_factory);
 
         $this->assertSame(
-            $channel_factory->getProducerChannel('fast_jobs'),
-            $strategy_factory->getProducerStrategy('fast_jobs')->getChannel()
+            $channel_factory->getProducerChannel('q_one'),
+            $strategy_factory->getProducerStrategy('q_one')->getChannel()
         );
         $this->assertSame(
-            $channel_factory->getConsumerChannel('slow_jobs'),
-            $strategy_factory->getConsumerStrategy('slow_jobs')->getChannel()
+            $channel_factory->getConsumerChannel('q_two'),
+            $strategy_factory->getConsumerStrategy('q_two')->getChannel()
         );
     }
 
     /**
-     * @param array|null $queues
+     * @param array $queues
      * @return DeliveryStrategyFactory
      */
     private function getTestStrategyFactory(array $queues = null)
     {
         if (!$queues) {
-            $queues = $this->getTestQueues();
+            $queues = ['q_one', 'q_two'];
         }
-        $config = $this->getTestConfig($queues);
 
+        $config = ConfigProvider::getConfigAdapter($queues);
         $channel_factory = new ChannelFactory($config);
-        return new DeliveryStrategyFactory($channel_factory);
-    }
+        $strategy_factory = new DeliveryStrategyFactory($channel_factory);
 
-    /**
-     * @param array $queues
-     * @return Config
-     */
-    private function getTestConfig(array $queues)
-    {
-        $config_provider = new ConfigProvider();
-
-        return $config_provider->getConfigAdapter($queues);
-    }
-
-    /**
-     * @return array
-     */
-    private function getTestQueues()
-    {
-        $config_provider = new ConfigProvider();
-
-        return [
-            'fast_jobs' => $config_provider->getQueueConfig(),
-            'slow_jobs' => $config_provider->getQueueConfig(),
-        ];
+        return $strategy_factory;
     }
 }

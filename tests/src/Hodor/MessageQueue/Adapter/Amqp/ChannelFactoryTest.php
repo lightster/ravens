@@ -2,7 +2,6 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
-use Hodor\MessageQueue\Adapter\Testing\Config;
 use LogicException;
 use PHPUnit_Framework_TestCase;
 
@@ -18,8 +17,7 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testConfigPassedInIsSameConfigRetrieved()
     {
-        $queues = $this->getTestQueues();
-        $config = $this->getTestConfig($queues);
+        $config = ConfigProvider::getConfigAdapter([]);
 
         $channel_factory = new ChannelFactory($config);
 
@@ -33,11 +31,11 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testChannelsCanBeRetrieved()
     {
-        $queues = $this->getTestQueues();
-        $config = $this->getTestConfig($queues);
+        $queues = ['q_one', 'q_two'];
+        $config = ConfigProvider::getConfigAdapter($queues);
 
         $channel_factory = new ChannelFactory($config);
-        foreach (array_keys($queues) as $queue_key) {
+        foreach ($queues as $queue_key) {
             $channel = $channel_factory->getConsumerChannel($queue_key);
             $this->assertInstanceOf('Hodor\MessageQueue\Adapter\Amqp\Channel', $channel);
         }
@@ -50,12 +48,12 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testChannelsAreReusedIfSameQueueKeyIsRequested()
     {
-        $config = $this->getTestConfig($this->getTestQueues());
+        $config = ConfigProvider::getConfigAdapter(['q_one']);
 
         $channel_factory = new ChannelFactory($config);
         $this->assertSame(
-            $channel_factory->getConsumerChannel('fast_jobs'),
-            $channel_factory->getConsumerChannel('fast_jobs')
+            $channel_factory->getConsumerChannel('q_one'),
+            $channel_factory->getConsumerChannel('q_one')
         );
     }
 
@@ -67,12 +65,12 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testChannelsAreNotReusedIfUseIsDifferent()
     {
-        $config = $this->getTestConfig($this->getTestQueues());
+        $config = ConfigProvider::getConfigAdapter(['q_one']);
 
         $channel_factory = new ChannelFactory($config);
         $this->assertNotSame(
-            $channel_factory->getConsumerChannel('fast_jobs'),
-            $channel_factory->getProducerChannel('fast_jobs')
+            $channel_factory->getConsumerChannel('q_one'),
+            $channel_factory->getProducerChannel('q_one')
         );
     }
 
@@ -83,12 +81,12 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testChannelsAreReusedIfSameChannelSettingsAreUsed()
     {
-        $config = $this->getTestConfig($this->getTestQueues());
+        $config = ConfigProvider::getConfigAdapter(['q_one', 'q_two']);
 
         $channel_factory = new ChannelFactory($config);
         $this->assertSame(
-            $channel_factory->getConsumerChannel('fast_jobs'),
-            $channel_factory->getConsumerChannel('slow_jobs')
+            $channel_factory->getConsumerChannel('q_one'),
+            $channel_factory->getConsumerChannel('q_two')
         );
     }
 
@@ -100,12 +98,12 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testConnectionsAreReusedEvenIfUseIsDifferent()
     {
-        $all_queues = $this->getTestQueues();
+        $queue_config = ConfigProvider::getQueueConfig();
         $queues = [
-            'original'  => $all_queues['fast_jobs'],
-            'duplicate' => $all_queues['fast_jobs'],
+            'original'  => $queue_config,
+            'duplicate' => $queue_config,
         ];
-        $config = $this->getTestConfig($queues);
+        $config = ConfigProvider::getConfigAdapter($queues);
 
         $channel_factory = new ChannelFactory($config);
         $this->assertSame(
@@ -123,20 +121,23 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testAllConnectionsAreClosedWhenDisconnectAllIsCalled()
     {
-        $queues = $this->getTestQueues();
-        $config = $this->getTestConfig($queues);
+        $config = ConfigProvider::getConfigAdapter([
+            'q_one' => ConfigProvider::getQueueConfig(),
+            'q_two' => ConfigProvider::getQueueConfig(),
+        ]);
 
         $channel_factory = new ChannelFactory($config);
-        $fast_jobs = $channel_factory->getProducerChannel('fast_jobs')->getAmqpChannel()->getConnection();
-        $slow_jobs = $channel_factory->getConsumerChannel('slow_jobs')->getAmqpChannel()->getConnection();
 
-        $this->assertTrue($fast_jobs->isConnected());
-        $this->assertTrue($slow_jobs->isConnected());
+        $one = $channel_factory->getProducerChannel('q_one')->getAmqpChannel()->getConnection();
+        $two = $channel_factory->getConsumerChannel('q_two')->getAmqpChannel()->getConnection();
+
+        $this->assertTrue($one->isConnected());
+        $this->assertTrue($two->isConnected());
 
         $channel_factory->disconnectAll();
 
-        $this->assertFalse($fast_jobs->isConnected());
-        $this->assertFalse($slow_jobs->isConnected());
+        $this->assertFalse($one->isConnected());
+        $this->assertFalse($two->isConnected());
     }
 
     /**
@@ -149,13 +150,12 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testAnExceptionIsThrownIfAnyRequiredConfigElementsAreMissing($config_key)
     {
-        $all_queues = $this->getTestQueues();
-        $queue = $all_queues['fast_jobs'];
+        $queue = ConfigProvider::getQueueConfig();
         unset($queue[$config_key]);
-        $config = $this->getTestConfig(['fast_jobs' => $queue]);
+        $config = ConfigProvider::getConfigAdapter(['broken_config' => $queue]);
 
         $channel_factory = new ChannelFactory($config);
-        $channel_factory->getProducerChannel('fast_jobs');
+        $channel_factory->getProducerChannel('broken_config');
     }
 
     /**
@@ -164,29 +164,5 @@ class ChannelFactoryTest extends PHPUnit_Framework_TestCase
     public function provideRequiredQueueConfigOptions()
     {
         return [['host'], ['port'], ['username'], ['password'], ['queue_name'],];
-    }
-
-    /**
-     * @param array $queues
-     * @return Config
-     */
-    private function getTestConfig(array $queues)
-    {
-        $config_provider = new ConfigProvider();
-
-        return $config_provider->getConfigAdapter($queues);
-    }
-
-    /**
-     * @return array
-     */
-    private function getTestQueues()
-    {
-        $config_provider = new ConfigProvider();
-
-        return [
-            'fast_jobs' => $config_provider->getQueueConfig(),
-            'slow_jobs' => $config_provider->getQueueConfig(),
-        ];
     }
 }

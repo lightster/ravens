@@ -8,14 +8,18 @@ class ConfigProvider
 {
     /**
      * @param array $queues
-     * @param array $config_overrides
      * @return Config
      */
-    public function getConfigAdapter(array $queues, array $config_overrides = [])
+    public static function getConfigAdapter(array $queues)
     {
         $config = new Config([]);
         foreach ($queues as $queue_key => $queue_config) {
-            $config->addQueueConfig($queue_key, array_merge($queue_config, $config_overrides));
+            if (is_string($queue_config)) {
+                $queue_key = $queue_config;
+                $queue_config = self::getQueueConfig();
+            }
+
+            $config->addQueueConfig($queue_key, $queue_config);
         }
 
         return $config;
@@ -24,9 +28,9 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function getQueueConfig()
+    public static function getQueueConfig()
     {
-        $rabbit_credentials = $this->getRabbitCredentials();
+        $rabbit_credentials = self::getRabbitCredentials();
 
         return [
             'host'       => $rabbit_credentials['host'],
@@ -40,10 +44,10 @@ class ConfigProvider
     /**
      * @return array
      */
-    private function getRabbitCredentials()
+    private static function getRabbitCredentials()
     {
         $config = require __DIR__ . '/../../../../../../config/config.test.php';
 
-        return  $config['test']['rabbitmq'];
+        return $config['test']['rabbitmq'];
     }
 }

@@ -36,6 +36,32 @@ class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::getExchangeName
+     * @covers ::<private>
+     */
+    public function testExchangeNameIsTheSystemExchange()
+    {
+        $queue_name = uniqid();
+        $channel = $this->getMockChannel();
+        $strategy = new DeliveryStrategy($channel, ['queue_name' => $queue_name]);
+        $this->assertSame('', $strategy->getExchangeName());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::getRoutingKey
+     * @covers ::<private>
+     */
+    public function testRoutingKeyIsTheQueueName()
+    {
+        $queue_name = uniqid();
+        $channel = $this->getMockChannel();
+        $strategy = new DeliveryStrategy($channel, ['queue_name' => $queue_name]);
+        $this->assertSame($queue_name, $strategy->getRoutingKey());
+    }
+
+    /**
+     * @covers ::__construct
      * @covers ::getChannel
      * @covers ::<private>
      */

@@ -75,10 +75,10 @@ class DeliveryStrategy
     {
         $this->channel->getAmqpChannel()->queue_declare(
             $this->queue_config['queue_name'],
-            false,
-            true,
-            false,
-            false
+            $this->queue_config['passive'],
+            $this->queue_config['durable'],
+            $this->queue_config['exclusive'],
+            $this->queue_config['auto_delete']
         );
 
         $this->is_initialized = true;
@@ -94,5 +94,15 @@ class DeliveryStrategy
                 throw new LogicException("The channel config must contain a '{$key}' config.");
             }
         }
+
+        $this->queue_config = array_merge(
+            [
+                'passive'     => false,
+                'durable'     => true,
+                'exclusive'   => false,
+                'auto_delete' => false,
+            ],
+            $this->queue_config
+        );
     }
 }

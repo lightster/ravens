@@ -3,39 +3,50 @@ application), this is what I am thinking the configuration concept / objects wil
 
 ```php
 $config['exchanges'] = [
-    'hodor-buffer' => [
+    'buffer' => [
         'host'       => 'rabbit-hodor-buffer',
         'port'       => '',
         'username'   => '',
         'password'   => '',
         'exchange'   => 'hodor-buffer-exchange'
         'publishers' => [
-            'hodor-buffer' => ['subscribers' => ['hodor-buffer']],
+            'buffer' => ['subscribers' => ['buffer']],
+        ],
+        'subscribers' => [
+            'buffer' => ['queue_name' => 'hodor-buffer'],
         ],
     ],
-    'hodor-worker' => [
+    'worker' => [
         'host'       => 'rabbit-hodor-worker',
         'port'       => '',
         'username'   => '',
         'password'   => '',
         'exchange'   => 'hodor-worker-exchange',
         'publishers' => [
-            'hodor-worker-default' => ['subscribers' => ['hodor-worker-default', 'hodor-logger-worker']],
-            'hodor-worker-long-running' => ['subscribers' => ['hodor-worker-long-running', 'hodor-logger-worker']],
+            'worker-default' => ['subscribers' => ['worker-default', 'logger-worker']],
+            'worker-long-running' => ['subscribers' => ['worker-long-running', 'logger-worker']],
+        ],
+        'subscribers' => [
+            'worker-default' => ['queue_name' => 'hodor-worker-default'],
+            'worker-long-running' => ['queue_name' => 'hodor-worker-long-running'],
+            'logger-worker' => ['queue_name' => 'hodor-logger-worker'],
         ],
     ],
 
-    'hodor-manage' => [
+    'manage' => [
         'host'       => 'rabbit-hodor-manage',
         'port'       => '',
         'username'   => '',
         'password'   => '',
         'exchange'   => 'hodor-manage-exchange'
         'publishers' => [
-            'hodor-manage' => ['subscribers' => gethostname()],
+            'process-killer' => ['subscribers' => env('HODOR_WORKER_SERVER') ? ['process-killer'] : []],
         ],
         'subscribers' => [
-            gethostname() => ['expiration' => 300],
+            'process-killer' => [
+                'queue_name' => 'hodor-process-killer-' . gethostname(),
+                'expiration' => 300
+            ],
         ],
     ],
 ];

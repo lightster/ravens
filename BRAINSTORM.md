@@ -23,8 +23,12 @@ $config['exchanges'] = [
         'password'   => '',
         'exchange'   => 'hodor-worker-exchange',
         'publishers' => [
-            'worker-default' => ['subscribers' => ['worker-default', 'logger-worker']],
-            'worker-long-running' => ['subscribers' => ['worker-long-running', 'logger-worker']],
+            'worker-default' => [
+                'subscribers' => ['worker-default', 'logger-worker']
+            ],
+            'worker-long-running' => [
+                'subscribers' => ['worker-long-running', 'logger-worker']
+            ],
         ],
         'subscribers' => [
             'worker-default' => ['queue_name' => 'hodor-worker-default'],
@@ -40,7 +44,9 @@ $config['exchanges'] = [
         'password'   => '',
         'exchange'   => 'hodor-manage-exchange'
         'publishers' => [
-            'process-killer' => ['subscribers' => env('HODOR_WORKER_SERVER') ? ['process-killer'] : []],
+            'process-killer' => [
+                'subscribers' => env('HODOR_WORKER_SERVER') ? ['process-killer'] : []
+            ],
         ],
         'subscribers' => [
             'process-killer' => [
@@ -51,3 +57,6 @@ $config['exchanges'] = [
     ],
 ];
 ```
+
+So with this idea, DeliveryStrategy would take a list of queues and then the consumer would
+need to know which queue it is consuming from (not via the DeliveryStrategy).

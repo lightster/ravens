@@ -39,12 +39,13 @@ class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
      * @covers ::getExchangeName
      * @covers ::<private>
      */
-    public function testExchangeNameIsTheSystemExchange()
+    public function testExchangeNamePassedToConstructorIsTheSameRetrieved()
     {
-        $queue_name = uniqid();
+        $exchange_name = uniqid();
         $channel = $this->getMockChannel();
-        $strategy = new DeliveryStrategy($channel, ['queue_name' => $queue_name]);
-        $this->assertSame('', $strategy->getExchangeName());
+        $queue_config = ['queue_name' => 'irrelevant', 'exchange_name' => $exchange_name];
+        $strategy = new DeliveryStrategy($channel, $queue_config);
+        $this->assertSame($exchange_name, $strategy->getExchangeName());
     }
 
     /**
@@ -120,7 +121,7 @@ class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
     {
         return [
             'q_one' => ConfigProvider::getQueueConfig(),
-            'q_two' => ConfigProvider::getQueueConfig(),
+            'q_two' => ConfigProvider::getQueueConfig() + ['exchange_name' => 'custom-exchange'],
         ];
     }
 

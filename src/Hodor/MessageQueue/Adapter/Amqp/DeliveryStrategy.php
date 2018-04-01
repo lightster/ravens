@@ -60,7 +60,7 @@ class DeliveryStrategy
      */
     public function getExchangeName()
     {
-        return '';
+        return $this->queue_config['exchange_name'];
     }
 
     /**
@@ -73,13 +73,27 @@ class DeliveryStrategy
 
     private function initialize()
     {
-        $this->channel->getAmqpChannel()->queue_declare(
+        $amqp_channel = $this->channel->getAmqpChannel();
+
+        $amqp_channel->queue_declare(
             $this->queue_config['queue_name'],
             $this->queue_config['passive'],
             $this->queue_config['durable'],
             $this->queue_config['exclusive'],
             $this->queue_config['auto_delete']
         );
+
+        if ($this->getExchangeName()) {
+            $amqp_channel->exchange_declare(
+                $this->getExchangeName(),
+                'direct'
+            );
+            $amqp_channel->queue_bind(
+                $this->queue_config['queue_name'],
+                $this->getExchangeName(),
+                $this->getRoutingKey()
+            );
+        }
 
         $this->is_initialized = true;
     }
@@ -97,10 +111,11 @@ class DeliveryStrategy
 
         $this->queue_config = array_merge(
             [
-                'passive'     => false,
-                'durable'     => true,
-                'exclusive'   => false,
-                'auto_delete' => false,
+                'exchange_name' => '',
+                'passive'       => false,
+                'durable'       => true,
+                'exclusive'     => false,
+                'auto_delete'   => false,
             ],
             $this->queue_config
         );

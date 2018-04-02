@@ -3,6 +3,7 @@
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
 use LogicException;
+use PhpAmqpLib\Wire\AMQPTable;
 
 class DeliveryStrategy
 {
@@ -75,12 +76,24 @@ class DeliveryStrategy
     {
         $amqp_channel = $this->channel->getAmqpChannel();
 
+        $queue_options = [];
+        if (!empty($this->queue_config['x-expires'])) {
+            $queue_options['x-expires'] = intval($this->queue_config['x-expires']);
+        }
+
+        $queue_opts_table = null;
+        if (!empty($queue_options)) {
+            $queue_opts_table = new AMQPTable($queue_options);
+        }
+
         $amqp_channel->queue_declare(
             $this->queue_config['queue_name'],
             $this->queue_config['passive'],
             $this->queue_config['durable'],
             $this->queue_config['exclusive'],
-            $this->queue_config['auto_delete']
+            $this->queue_config['auto_delete'],
+            $this->queue_config['nowait'],
+            $queue_opts_table
         );
 
         if ($this->getExchangeName()) {
@@ -116,6 +129,8 @@ class DeliveryStrategy
                 'durable'       => true,
                 'exclusive'     => false,
                 'auto_delete'   => false,
+                'nowait'        => false,
+                'x-expires'     => null,
             ],
             $this->queue_config
         );

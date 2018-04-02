@@ -38,6 +38,7 @@ class ConfigProvider
             'username'   => $rabbit_credentials['username'],
             'password'   => $rabbit_credentials['password'],
             'queue_name' => $rabbit_credentials['queue_prefix'] . uniqid(),
+            'x-expires'  => 5000,
         ];
     }
 

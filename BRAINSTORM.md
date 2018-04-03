@@ -60,3 +60,16 @@ $config['exchanges'] = [
 
 So with this idea, DeliveryStrategy would take a list of queues and then the consumer would
 need to know which queue it is consuming from (not via the DeliveryStrategy).
+
+```php
+$exchange = $producer->getExchange('worker');
+$exchange->push('worker-default', new OutgoingMessage());
+
+$queue = $consumer->getQueue('worker-default');
+$queue->consume(
+    function (IncomingMessage $message) {
+        $message->acknowledge();
+    },
+    ['max_message_count' => 3]
+);
+```

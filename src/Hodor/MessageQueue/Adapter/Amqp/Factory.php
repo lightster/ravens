@@ -52,8 +52,8 @@ class Factory implements FactoryInterface
             return $this->consumers[$queue_key];
         }
 
-        $delivery_strategy = $this->getDeliveryStrategyFactory()->getConsumerStrategy($queue_key);
-        $this->consumers[$queue_key] = new Consumer($delivery_strategy);
+        $consumer_strategy = $this->getDeliveryStrategyFactory()->getConsumerStrategy($queue_key);
+        $this->consumers[$queue_key] = new Consumer($consumer_strategy);
 
         return $this->consumers[$queue_key];
     }

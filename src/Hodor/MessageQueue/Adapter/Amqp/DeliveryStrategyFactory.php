@@ -24,11 +24,14 @@ class DeliveryStrategyFactory
 
     /**
      * @param string $queue_key
-     * @return DeliveryStrategy
+     * @return ConsumerStrategy
      */
     public function getConsumerStrategy($queue_key)
     {
-        return $this->getStrategy('consumer', $queue_key);
+        return new ConsumerStrategy(
+            $this->getStrategy('consumer', $queue_key),
+            $queue_key
+        );
     }
 
     /**

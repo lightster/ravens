@@ -28,9 +28,12 @@ class DeliveryStrategyFactory
      */
     public function getConsumerStrategy($queue_key)
     {
-        return new ConsumerStrategy(
-            $this->getStrategy('consumer', $queue_key),
-            $queue_key
+        return $this->getStrategy(
+            'consumer',
+            $queue_key,
+            function ($queue_key, $delivery_strategy) {
+                return new ConsumerStrategy($delivery_strategy, $queue_key);
+            }
         );
     }
 
@@ -46,9 +49,9 @@ class DeliveryStrategyFactory
     /**
      * @param string $use
      * @param string $queue_key
-     * @return DeliveryStrategy
+     * @return mixed
      */
-    private function getStrategy($use, $queue_key)
+    private function getStrategy($use, $queue_key, $middleware = null)
     {
         $cache_key = "{$use}:{$queue_key}";
 
@@ -56,9 +59,19 @@ class DeliveryStrategyFactory
             return $this->delivery_strategy[$cache_key];
         }
 
-        $this->delivery_strategy[$cache_key] = new DeliveryStrategy(
-            $this->getChannel($use, $queue_key),
-            $this->channel_factory->getConfig()->getQueueConfig($queue_key)
+        if (!$middleware) {
+            $middleware = function ($queue_key, $delivery_strategy) {
+                return $delivery_strategy;
+            };
+        }
+
+        $this->delivery_strategy[$cache_key] = call_user_func(
+            $middleware,
+            $queue_key,
+            new DeliveryStrategy(
+                $this->getChannel($use, $queue_key),
+                $this->channel_factory->getConfig()->getQueueConfig($queue_key)
+            )
         );
 
         return $this->delivery_strategy[$cache_key];

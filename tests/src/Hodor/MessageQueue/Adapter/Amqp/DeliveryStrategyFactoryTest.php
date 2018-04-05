@@ -72,7 +72,7 @@ class DeliveryStrategyFactoryTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             $channel_factory->getConsumerChannel('q_two'),
-            $strategy_factory->getConsumerStrategy('q_two')->getChannel()
+            $strategy_factory->getConsumerStrategy('q_two')->getDeliveryStrategy()->getChannel()
         );
     }
 

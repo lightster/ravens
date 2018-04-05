@@ -10,16 +10,16 @@ use PhpAmqpLib\Exception\AMQPTimeoutException;
 class Consumer implements ConsumerInterface
 {
     /**
-     * @var DeliveryStrategy
+     * @var ConsumerStrategy
      */
-    private $delivery_strategy;
+    private $consumer_strategy;
 
     /**
-     * @param DeliveryStrategy $delivery_strategy
+     * @param ConsumerStrategy $consumer_strategy
      */
-    public function __construct(DeliveryStrategy $delivery_strategy)
+    public function __construct(ConsumerStrategy $consumer_strategy)
     {
-        $this->delivery_strategy = $delivery_strategy;
+        $this->consumer_strategy = $consumer_strategy;
     }
 
     /**
@@ -39,7 +39,7 @@ class Consumer implements ConsumerInterface
         $amqp_channel = $this->getChannel()->getAmqpChannel();
 
         $amqp_channel->basic_consume(
-            $this->getDeliveryStrategy()->getQueueName(),
+            $this->consumer_strategy->getQueueName(),
             '',
             false,
             false,
@@ -59,18 +59,10 @@ class Consumer implements ConsumerInterface
     }
 
     /**
-     * @return DeliveryStrategy
-     */
-    private function getDeliveryStrategy()
-    {
-        return $this->delivery_strategy;
-    }
-
-    /**
      * @return Channel
      */
     private function getChannel()
     {
-        return $this->getDeliveryStrategy()->getChannel();
+        return $this->consumer_strategy->getDeliveryStrategy()->getChannel();
     }
 }

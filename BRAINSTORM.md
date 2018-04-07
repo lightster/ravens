@@ -63,13 +63,13 @@ need to know which queue it is consuming from (not via the DeliveryStrategy).
 
 ```php
 $exchange = $producer->getExchange('worker');
-$exchange->push('worker-default', new OutgoingMessage());
+$exchange->push('worker-default', new OutgoingMessage(['the' => 'message']));
 
 $exchange = $producer->getExchange('worker');
 $exchange->push(new OutgoingMessage(['the' => 'message'], 'worker-default'));
 
 $route = $producer->getRoute('worker', 'worker-default');
-$route->push(new OutgoingMessage());
+$route->push(new OutgoingMessage(['the' => 'message']));
 
 $queue = $consumer->getQueue('worker-default');
 $queue->consume(

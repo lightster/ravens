@@ -1,3 +1,6 @@
+# Brainstorming
+
+## Handling Exchanges
 While Ravens will probably not directly have a config file (since it is a library, not an
 application), this is what I am thinking the configuration concept / objects will be based off: 
 
@@ -73,3 +76,19 @@ $queue->consume(
     ['max_message_count' => 3]
 );
 ```
+
+## Handling Forks
+
+If a process is forked, any channels that were open when the process was forked need to
+be re-initialized.  That is, channels cannot be re-used across forks.  However, the
+connection can be re-used across the forked processes.
+
+The connection does require special handling, though, when it comes to closing the
+connection.  The child processes should not close the connection when exiting because
+the connection may be in use by other child processes or the parent process.
+
+A few potential solutions:
+ - Record the PID when creating an AMQP channel and check the PID every time the channel
+   is used.  If the PID has changed, then re-initialize the AMQP channel. 
+ - Add a method to Adapter\FactoryInterface that allows for the process to be marked as
+   a fork, causing all channels to be re-initialized.  

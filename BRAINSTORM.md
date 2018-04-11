@@ -89,6 +89,7 @@ the connection may be in use by other child processes or the parent process.
 
 A few potential solutions:
  - Record the PID when creating an AMQP channel and check the PID every time the channel
-   is used.  If the PID has changed, then re-initialize the AMQP channel. 
+   is used.  If the PID has changed, then re-initialize the AMQP channel.  Calling getmypid()
+   in PHP a million times on my 3+ year old Mac runs in about 0.12 seconds.
  - Add a method to Adapter\FactoryInterface that allows for the process to be marked as
    a fork, causing all channels to be re-initialized.  

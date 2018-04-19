@@ -3,6 +3,7 @@
 namespace Hodor\MessageQueue\Adapter\Testing;
 
 use Hodor\MessageQueue\Adapter\ConsumerInterface;
+use Hodor\MessageQueue\Exception\TimeoutException;
 use Hodor\MessageQueue\IncomingMessage;
 
 class Consumer implements ConsumerInterface
@@ -23,6 +24,7 @@ class Consumer implements ConsumerInterface
     /**
      * @param callable $callback
      * @param array|null $options
+     * @throws TimeoutException
      */
     public function consumeMessage(callable $callback, array $options = null)
     {

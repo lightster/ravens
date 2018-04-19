@@ -49,6 +49,7 @@ class Consumer
      * @param string $queue_key
      * @param callable $callback to use for handling the message
      * @param array|null $options
+     * @throws Exception\TimeoutException
      */
     private function consume($queue_key, callable $callback, array $options = null)
     {

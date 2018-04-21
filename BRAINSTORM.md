@@ -77,6 +77,13 @@ $queue->consume(
 );
 ```
 
+### What about queues that are bound to multiple exchanges?
+
+As far as the above code snippet goes, binding a queue to multiple exchanges will
+work fine.  However, the config needs to support defining the subscribers (queues)
+outside of the exchange config so the queue can be referenced from multiple
+exchanges.
+
 ## Handling Forks
 
 If a process is forked, any channels that were open when the process was forked need to

@@ -1,27 +1,22 @@
 language: php
-
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-
+- 5.5
+- 5.6
+- 7.0
+- 7.1
+- 7.2
 services:
-  - rabbitmq
-
+- rabbitmq
 before_script:
-  - cp config/dist/config.test.php config/config.test.php
-
+- cp config/dist/config.test.php config/config.test.php
 install:
-  - composer install
-
+- composer install
 after_script:
-  - vendor/bin/test-reporter --coverage-report=tests/log/coverage.xml
-
+- vendor/bin/test-reporter --coverage-report=tests/log/coverage.xml
 notifications:
   slack:
     rooms:
-      - secure: eukcST8ddNlwbW5jHMCJE6rbJou6YFTTNPczsT2rRec/CbT7Z+zIDM5GErmPy3kbO9jn7Nh1g3xC6su6CSKrIuHYmHzZLz4u+G5vFQhRoV+WwWzuImbVvJAXIzA1V/+AMzCGNqolBmp2vQkbXIP//k7T3OnwddKlRFhd8caYQsrmMvHSZwde8pdTQG6c/iHm7Ur1/4JpgKghoejoR5HjOv6ldbqsCOz2QurMBZELlHg0H/2+tqRfuuDTorWtNfiohi8t45RZqy8Vbjrv/vQElFoUFbg6HFvIMYtRCHmBAkLCC01UBCk04CV40Kl1bIcupvPeMgLoi9rdRRUA+gQnKiaPTUCLN6zcsVukVgyTkZIVZPvcZvd+FzCEVNiLHs2zNMuStmsfKENFdzuJgPT4AbHbQkpP2daRimCXP2GmQGwdYtf8p9SOL7LufzOJWDrEuE6Heacdnn6b9upSSKVO1V1MkPT4RJWl7df+4DO8fTtfNMLrCs+ASYJ1fAvZdPthF+B18mabtW1AnXXVbiESIK0wwZTAW/mD/z65oTETVzbk89u79Io2n2sMkMafyJLopWcXOuTs+zQlv9JfZTXAGd90pZFeJafxyasHlS2zvNPnv9oQK7o/HgsoIA9EGsPlYwH/BZdgfHs75fOTdVcg8InzQ/iXXt8f0VSakqAmwqc=
+      secure: LVkL1gDRIaELIR34sP8NLE1XKDl9GBSg9VvnJJ3S9FlB/UHgvhX8AeA7cjPumGeEJGqE0JtHfLVGrLfcjSPw4gvn2uf9ZF4t/sE86kCRoBS3n8pDJrmKaYBSF4AvLRlvS6+uKFWTD9CS2vTY5MQIRL6FWEKlBZYQFrsvqe2He0UJNJ9UhTUi9Ux2jyQ6PckihgBZ1ivts71vogk1gFk46i21v/OJo0KoxqNVA3ji6T+FrFSXr+lrZPMgpxA3Fnni6ACI+2FOWzhV9YV+DcoSB1GIZx5X5gh1i/uZmK/ieRwcx3KnKPXGudEACl6Z/dFl+m2gFJ/oad8r9aqqIWgj4iotTmdHg6H7urQjmDDhCs+O85bXilKbAUVI5W0UfwywDB4ilNoN3hJAYbERoNKH/Ib5fm01Jf6p+SSMYyb89HlcRypl78yp+lWjht+32rnPPWHx8gdC3cGX0J4Nom/3pKfUxJ1DhhK/0R79yLW1tGpLhq/lxd/pBd2V5IAr22/dDzZKFdyl6hQ22h2zSJiDzcQc3KoOuK0gqBLXo+lXty3qEfrkA+XGg8rmXKumTwztog2qoVFl1Qxe8iMzc8JWBBHKvHxAhfoa6U91PkAOJnqtK8nF2eqeBvY7rJHQKL5R1OhvJXDE/7c6Cdc5f6bAPxPgrPXoQ+OUl+JcJD18Goo=
     on_success: change
     on_failure: always
-    on_start:   change
+    on_pull_requests: false

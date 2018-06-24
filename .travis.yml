@@ -1,27 +1,21 @@
 language: php
-
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-
+- 5.5
+- 5.6
+- 7.0
+- 7.1
 services:
-  - rabbitmq
-
+- rabbitmq
 before_script:
-  - cp config/dist/config.test.php config/config.test.php
-
+- cp config/dist/config.test.php config/config.test.php
 install:
-  - composer install
-
+- composer install
 after_script:
-  - vendor/bin/test-reporter --coverage-report=tests/log/coverage.xml
-
+- vendor/bin/test-reporter --coverage-report=tests/log/coverage.xml
 notifications:
   slack:
     rooms:
-      - secure: eukcST8ddNlwbW5jHMCJE6rbJou6YFTTNPczsT2rRec/CbT7Z+zIDM5GErmPy3kbO9jn7Nh1g3xC6su6CSKrIuHYmHzZLz4u+G5vFQhRoV+WwWzuImbVvJAXIzA1V/+AMzCGNqolBmp2vQkbXIP//k7T3OnwddKlRFhd8caYQsrmMvHSZwde8pdTQG6c/iHm7Ur1/4JpgKghoejoR5HjOv6ldbqsCOz2QurMBZELlHg0H/2+tqRfuuDTorWtNfiohi8t45RZqy8Vbjrv/vQElFoUFbg6HFvIMYtRCHmBAkLCC01UBCk04CV40Kl1bIcupvPeMgLoi9rdRRUA+gQnKiaPTUCLN6zcsVukVgyTkZIVZPvcZvd+FzCEVNiLHs2zNMuStmsfKENFdzuJgPT4AbHbQkpP2daRimCXP2GmQGwdYtf8p9SOL7LufzOJWDrEuE6Heacdnn6b9upSSKVO1V1MkPT4RJWl7df+4DO8fTtfNMLrCs+ASYJ1fAvZdPthF+B18mabtW1AnXXVbiESIK0wwZTAW/mD/z65oTETVzbk89u79Io2n2sMkMafyJLopWcXOuTs+zQlv9JfZTXAGd90pZFeJafxyasHlS2zvNPnv9oQK7o/HgsoIA9EGsPlYwH/BZdgfHs75fOTdVcg8InzQ/iXXt8f0VSakqAmwqc=
+    - secure: eukcST8ddNlwbW5jHMCJE6rbJou6YFTTNPczsT2rRec/CbT7Z+zIDM5GErmPy3kbO9jn7Nh1g3xC6su6CSKrIuHYmHzZLz4u+G5vFQhRoV+WwWzuImbVvJAXIzA1V/+AMzCGNqolBmp2vQkbXIP//k7T3OnwddKlRFhd8caYQsrmMvHSZwde8pdTQG6c/iHm7Ur1/4JpgKghoejoR5HjOv6ldbqsCOz2QurMBZELlHg0H/2+tqRfuuDTorWtNfiohi8t45RZqy8Vbjrv/vQElFoUFbg6HFvIMYtRCHmBAkLCC01UBCk04CV40Kl1bIcupvPeMgLoi9rdRRUA+gQnKiaPTUCLN6zcsVukVgyTkZIVZPvcZvd+FzCEVNiLHs2zNMuStmsfKENFdzuJgPT4AbHbQkpP2daRimCXP2GmQGwdYtf8p9SOL7LufzOJWDrEuE6Heacdnn6b9upSSKVO1V1MkPT4RJWl7df+4DO8fTtfNMLrCs+ASYJ1fAvZdPthF+B18mabtW1AnXXVbiESIK0wwZTAW/mD/z65oTETVzbk89u79Io2n2sMkMafyJLopWcXOuTs+zQlv9JfZTXAGd90pZFeJafxyasHlS2zvNPnv9oQK7o/HgsoIA9EGsPlYwH/BZdgfHs75fOTdVcg8InzQ/iXXt8f0VSakqAmwqc=
     on_success: change
     on_failure: always
-    on_start:   change
+    on_start: change

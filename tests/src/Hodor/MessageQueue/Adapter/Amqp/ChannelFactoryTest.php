@@ -3,12 +3,12 @@
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
 use LogicException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Adapter\Amqp\ChannelFactory
  */
-class ChannelFactoryTest extends PHPUnit_Framework_TestCase
+class ChannelFactoryTest extends TestCase
 {
     /**
      * @covers ::__construct

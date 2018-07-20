@@ -3,12 +3,12 @@
 namespace Hodor\MessageQueue\Adapter\Testing;
 
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Adapter\Testing\MessageBank
  */
-class MessageBankTest extends PHPUnit_Framework_TestCase
+class MessageBankTest extends TestCase
 {
     /**
      * @covers ::__construct

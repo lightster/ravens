@@ -5,12 +5,12 @@ namespace Hodor\MessageQueue;
 use Hodor\MessageQueue\Adapter\Testing\Config;
 use Hodor\MessageQueue\Adapter\Testing\Factory;
 use Hodor\MessageQueue\Adapter\Testing\MessageBankFactory;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Consumer
  */
-class ConsumerTest extends PHPUnit_Framework_TestCase
+class ConsumerTest extends TestCase
 {
     /**
      * @var MessageBankFactory

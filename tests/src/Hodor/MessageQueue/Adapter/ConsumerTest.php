@@ -4,9 +4,9 @@ namespace Hodor\MessageQueue\Adapter;
 
 use Hodor\MessageQueue\IncomingMessage;
 use Hodor\MessageQueue\OutgoingMessage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class ConsumerTest extends PHPUnit_Framework_TestCase
+abstract class ConsumerTest extends TestCase
 {
     /**
      * @covers ::__construct

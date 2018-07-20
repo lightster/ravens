@@ -2,12 +2,12 @@
 
 namespace Hodor\MessageQueue\Adapter\Testing;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Adapter\Testing\Config
  */
-class ConfigTest extends PHPUnit_Framework_TestCase
+class ConfigTest extends TestCase
 {
     /**
      * @covers ::__construct

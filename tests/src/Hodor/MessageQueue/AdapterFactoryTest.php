@@ -4,12 +4,12 @@ namespace Hodor\MessageQueue;
 
 use Exception;
 use Hodor\MessageQueue\Adapter\Testing\Config;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\AdapterFactory
  */
-class AdapterFactoryTest extends PHPUnit_Framework_TestCase
+class AdapterFactoryTest extends TestCase
 {
     /**
      * @covers ::getAdapter

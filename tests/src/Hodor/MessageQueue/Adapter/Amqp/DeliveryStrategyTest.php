@@ -2,12 +2,12 @@
 
 namespace Hodor\MessageQueue\Adapter\Amqp;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\Adapter\Amqp\DeliveryStrategy
  */
-class DeliveryStrategyTest extends PHPUnit_Framework_TestCase
+class DeliveryStrategyTest extends TestCase
 {
     /**
      * @covers ::__construct

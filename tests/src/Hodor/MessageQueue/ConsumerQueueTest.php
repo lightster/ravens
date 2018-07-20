@@ -2,12 +2,12 @@
 
 namespace Hodor\MessageQueue;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\ConsumerQueue
  */
-class ConsumerQueueTest extends PHPUnit_Framework_TestCase
+class ConsumerQueueTest extends TestCase
 {
     /**
      * @covers ::__construct

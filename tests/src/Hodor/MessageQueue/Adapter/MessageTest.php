@@ -2,9 +2,9 @@
 
 namespace Hodor\MessageQueue\Adapter;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class MessageTest extends PHPUnit_Framework_TestCase
+abstract class MessageTest extends TestCase
 {
     /**
      * @covers ::__construct

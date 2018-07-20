@@ -2,13 +2,13 @@
 
 namespace Hodor\MessageQueue;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\OutgoingMessage
  */
-class OutgoingMessageTest extends PHPUnit_Framework_TestCase
+class OutgoingMessageTest extends TestCase
 {
     /**
      * @covers ::__construct

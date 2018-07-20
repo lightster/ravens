@@ -2,12 +2,12 @@
 
 namespace Hodor\MessageQueue;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass Hodor\MessageQueue\IncomingMessage
  */
-class IncomingMessageTest extends PHPUnit_Framework_TestCase
+class IncomingMessageTest extends TestCase
 {
     /**
      * @covers ::__construct
@@ -17,7 +17,7 @@ class IncomingMessageTest extends PHPUnit_Framework_TestCase
     {
         $uniq_id = uniqid();
 
-        $message_interface = $this->getMock('Hodor\MessageQueue\Adapter\MessageInterface');
+        $message_interface = $this->createMock('Hodor\MessageQueue\Adapter\MessageInterface');
         $message_interface
             ->expects($this->once())
             ->method('getContent')
@@ -35,7 +35,7 @@ class IncomingMessageTest extends PHPUnit_Framework_TestCase
     {
         $uniq_id = uniqid();
 
-        $message_interface = $this->getMock('Hodor\MessageQueue\Adapter\MessageInterface');
+        $message_interface = $this->createMock('Hodor\MessageQueue\Adapter\MessageInterface');
         $message_interface
             ->expects($this->once())
             ->method('getContent')
@@ -52,7 +52,7 @@ class IncomingMessageTest extends PHPUnit_Framework_TestCase
      */
     public function testMessageCanBeAcknowledged()
     {
-        $message_interface = $this->getMock('Hodor\MessageQueue\Adapter\MessageInterface');
+        $message_interface = $this->createMock('Hodor\MessageQueue\Adapter\MessageInterface');
         $message_interface
             ->expects($this->once())
             ->method('acknowledge');
@@ -67,7 +67,7 @@ class IncomingMessageTest extends PHPUnit_Framework_TestCase
      */
     public function testMessageIsAcknowledgedAtMostOnce()
     {
-        $message_interface = $this->getMock('Hodor\MessageQueue\Adapter\MessageInterface');
+        $message_interface = $this->createMock('Hodor\MessageQueue\Adapter\MessageInterface');
         $message_interface
             ->expects($this->once())
             ->method('acknowledge');
@@ -84,7 +84,7 @@ class IncomingMessageTest extends PHPUnit_Framework_TestCase
      */
     public function testAcknowledgingMessageCanBeDetected()
     {
-        $message_interface = $this->getMock('Hodor\MessageQueue\Adapter\MessageInterface');
+        $message_interface = $this->createMock('Hodor\MessageQueue\Adapter\MessageInterface');
         $message_interface
             ->expects($this->once())
             ->method('acknowledge');
